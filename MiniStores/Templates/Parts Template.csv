@@ -1,0 +1,27 @@
+PartName,Type,Quantity,Manufacturer,Location,Position
+100 Ohm,Resistor,10,Unknown,RS-Pro,A01
+50 Ohm,Resistor,20,MOS,RS-Pro,A02
+1000 Ohms,Resistor,100,IBM,RS-Pro,A03
+10 uF,Capacitor,10,Hitachi,RS-Pro,B01
+Sample,Unknown,1,Mouser,RS-Pro,B02
+0 Ohms,Resistor,25,ELEGOO ,Manutan,A01
+10 Ohms,Resistor,25,ELEGOO ,Manutan,A02
+47 Ohms,Resistor,25,ELEGOO ,Manutan,B01
+2.2k Ohms,Resistor,25,ELEGOO ,Manutan,B02
+22k Ohms,Resistor,25,ELEGOO ,Manutan,C01
+100k Ohms,Resistor,25,ELEGOO ,Manutan,C02
+470k Ohms,Resistor,25,ELEGOO ,Manutan,D01
+100 Ohms,Resistor,50,ELEGOO ,Manutan,D02
+1k Ohms,Resistor,50,ELEGOO ,Manutan,A01
+1N4148,Diode,25,MOGAOPI,Raaco 18,A01
+1N1007,Diode,25,MOGAOPI,Raaco 18,A02
+1N5819,Diode,10,MOGAOPI,Raaco 18,A03
+1N5309,Diode,10,MOGAOPI,Raaco 18,B01
+FR107,Diode,10,MOGAOPI,Raaco 18,B02
+FR207,Diode,10,MOGAOPI,Raaco 18,B03
+1N5822,Diode,5,MOGAOPI,Raaco 18,C01
+Red,LED,20,MOGAOPI,Raaco 18,C02
+Green,LED,20,MOGAOPI,Raaco 18,C03
+Blue,LED,20,MOGAOPI,Raaco 18,D01
+Yellow,LED,20,MOGAOPI,Raaco 18,D02
+White,LED,20,MOGAOPI,Raaco 18,D03
