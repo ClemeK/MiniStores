@@ -1,0 +1,59 @@
+﻿<Window x:Class="MiniStores.AboutAbout"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MiniStores"
+        mc:Ignorable="d"
+        Title="About" Height="300" Width="600" WindowStartupLocation="CenterScreen">
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0" Stretch="Fill" HorizontalAlignment="Stretch" Height="80"
+                   VerticalAlignment="Stretch" Source="Resources\shelf_full_icon.png"></Image>
+            <Label Grid.Column="1" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" Content="Mini Stores"></Label>
+        </Grid>
+
+        <Separator/>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <!--Title-->
+                <RowDefinition Height="*" />
+                <!--Description-->
+                <RowDefinition Height="*" />
+                <!--Product-->
+                <RowDefinition Height="*" />
+                <!--Copyright-->
+                <RowDefinition Height="*" />
+                <!--Version-->
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Title:" FontSize="14" FontWeight="Bold" />
+            <Label Grid.Row="0" Grid.Column="1" x:Name="lblTitle" FontSize="14"/>
+
+            <Label  Grid.Row="1" Grid.Column="0" Content="Description:" FontSize="14" FontWeight="Bold"/>
+            <TextBox  Grid.Row="1" Grid.Column="1" x:Name="tbDescription" FontSize="14" TextWrapping="Wrap" IsReadOnly="True" BorderBrush="#FFF9F9F9"/>
+
+            <Label  Grid.Row="2" Grid.Column="0" Content="Product:" FontSize="14" FontWeight="Bold"/>
+            <Label  Grid.Row="2" Grid.Column="1" x:Name="lblProduct" FontSize="14"/>
+
+            <Label  Grid.Row="3" Grid.Column="0" Content="Copyright:" FontSize="14" FontWeight="Bold"/>
+            <Label  Grid.Row="3" Grid.Column="1" x:Name="lblCopyright" FontSize="14"/>
+
+            <Label  Grid.Row="4" Grid.Column="0" Content="Version:" FontSize="14" FontWeight="Bold"/>
+            <Label  Grid.Row="4" Grid.Column="1" x:Name="lblVersion" FontSize="14"/>
+        </Grid>
+    </StackPanel>
+</Window>

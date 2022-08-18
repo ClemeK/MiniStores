@@ -3,10 +3,6 @@ using MiniStores.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
 
 namespace MiniStores
 {
@@ -63,13 +59,17 @@ namespace MiniStores
             // read through the Lines of the file 
             for (int j = 0; j < lines.Length; j++)
             {
-                string[] columns = lines[j].Split(',');
-
-                columns[0] = columns[0].Trim();
-
-                if (columns[0] != header)
+                if (lines[j] != "")
                 {
-                    data.Add(columns[0]);
+
+                    string[] columns = lines[j].Split(',');
+
+                    columns[0] = columns[0].Trim();
+
+                    if (columns[0] != header)
+                    {
+                        data.Add(columns[0]);
+                    }
                 }
             }
 
@@ -87,45 +87,55 @@ namespace MiniStores
             // read through the Lines of the file 
             for (int j = 0; j < lines.Length; j++)
             {
-                string[] columns = lines[j].Split(',');
-
-                if (columns[1] != header)
+                if (lines[j] != "")
                 {
-                    ColumnModel2 c = new ColumnModel2();
-                    c.First = columns[0].Trim();  // Location
-                    c.Second = columns[1].Trim(); // Position
+                    string[] columns = lines[j].Split(',');
 
-                    data.Add(c);
+                    if (columns[1] != header)
+                    {
+
+                        ColumnModel2 c = new ColumnModel2();
+                        c.First = columns[0].Trim();
+                        c.Second = columns[1].Trim();
+
+                        data.Add(c);
+                    }
                 }
             }
 
             return data;
         }
 
-        public static List<ColumnModel6> ReadImportFile6(string path, string header)
+        public static List<ColumnModel8> ReadImportFile6(string path, string header)
         {
             string[] lines = System.IO.File.ReadAllLines(path);
 
             int freq = lines[0].Count(f => (f == ','));
 
-            List<ColumnModel6> data = new List<ColumnModel6> { };
+            List<ColumnModel8> data = new List<ColumnModel8> { };
 
             // read through the Lines of the file 
             for (int j = 0; j < lines.Length; j++)
             {
-                string[] columns = lines[j].Split(',');
-
-                if (columns[0] != header)
+                if (lines[j] != "")
                 {
-                    ColumnModel6 c = new ColumnModel6();
-                    c.First = columns[0].Trim();  // Part Name
-                    c.Second = columns[1].Trim(); // Type
-                    c.Thrid = columns[2].Trim();  // Quantity
-                    c.Fourth = columns[3].Trim(); // Manufacturer
-                    c.Fifth = columns[4].Trim();  // Location
-                    c.Sixth = columns[5].Trim();  // Position
 
-                    data.Add(c);
+                    string[] columns = lines[j].Split(',');
+
+                    if (columns[0] != header)
+                    {
+                        ColumnModel8 c = new ColumnModel8();
+                        c.First = columns[0].Trim();  // Part Name
+                        c.Second = columns[1].Trim(); // Type
+                        c.Thrid = columns[2].Trim();  // Quantity
+                        c.Fourth = columns[3].Trim(); // Manufacturer
+                        c.Fifth = columns[4].Trim();  // Location
+                        c.Sixth = columns[5].Trim();  // Position
+                        c.Seventh = columns[6].Trim();  // Position
+                        c.Eighth = columns[7].Trim();  // Position
+
+                        data.Add(c);
+                    }
                 }
             }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MiniStores.Models
+﻿namespace MiniStores.Models
 {
     internal class ColumnModel2
     {
@@ -12,7 +6,7 @@ namespace MiniStores.Models
         public string Second { get; set; }
     }
 
-    internal class ColumnModel6
+    internal class ColumnModel8
     {
         public string First { get; set; }
         public string Second { get; set; }
@@ -20,5 +14,7 @@ namespace MiniStores.Models
         public string Fourth { get; set; }
         public string Fifth { get; set; }
         public string Sixth { get; set; }
+        public string Seventh { get; set; }
+        public string Eighth { get; set; }
     }
 }

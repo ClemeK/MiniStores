@@ -5,11 +5,22 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\shelf_full_icon.ico</ApplicationIcon>
+    <Description>MiniStore -  Inventory Application for Hobbies</Description>
+    <Copyright>Kelvin Clements 2022</Copyright>
+    <PackageIcon>shelf_full_icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\Help.rtf" />
-    <None Remove="Resources\shelf_full_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\shelf_full_icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,9 +46,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Language\en-GB.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Language\fr-FR.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MiniStores.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\shelf_full_icon.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Resources\shelf_full_icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
     <None Update="Stores.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

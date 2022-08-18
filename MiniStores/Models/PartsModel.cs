@@ -9,5 +9,21 @@
         public int ManufacturerFK { get; set; }
         public int LocationFK { get; set; }
         public int PositionFK { get; set; }
+        public decimal Price { get; set; }
+        public string Comment { get; set; }
+
+
+        public override string ToString()
+        {
+            string output = " ID: " + PartsId
+                + " Part: " + PartName
+                + " Type:" + TypeFK
+                + " Quantity:" + Quantity
+                + " Manufacturer:" + ManufacturerFK
+                + " Location:" + LocationFK
+                + " Position:" + PositionFK;
+
+            return output;
+        }
     }
 }

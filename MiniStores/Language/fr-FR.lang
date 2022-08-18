@@ -1,0 +1,48 @@
+Key,Phrase
+Search,Chercher
+Part,Partie
+Parts,Les pièces
+Type,Taper
+Types,Types
+TypeM,Les types:
+Manufacturer,Fabricant
+Manufacturers,Fabricants
+ManufacturerM,Fabricant:
+Location,Emplacement
+Locations,Emplacements
+LocationM,Emplacement:
+Position,Position
+Positions,Postes
+PositionM,Position:
+Id,Id
+Qty,Qté
+PartId,Partie Id:
+PartName,Nom de la pièce:
+Quantity,Quantité:
+Price,Prix:
+Comment,Commentaire:
+PartList,Liste des pièces:
+TypeId,Taper Id:
+TypeName,Tapez le nom:
+TypeList,Liste des types:
+ManufacturerId,Fabricant Id:
+ManufacturerName,Nom du Fabricant:
+ManufacturerList,Liste des fabricants:
+LocationId,Emplacement Id:
+LocationName,Nom de la localisation:
+LocationList,Liste des emplacements:
+PositionId,Position Id:
+PositionName,Nom du poste:
+PositionList,Liste des postes:
+Add,Ajouter
+Update,Mise à jour
+Delete,Effacer
+Clear,Dégager
+Refresh,Rafraîchir
+Import,Importer
+Export,Exporter
+File,Dossier
+Exit,Sortir
+Help,Aider
+ViewHelp,Voir aide
+AboutMiniStores,À propos des MiniStores

@@ -5,30 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniStores"
         mc:Ignorable="d"
-        Title="Mini-Stores" Height="635" Width="700" WindowStartupLocation="CenterScreen">
-    
-    <StackPanel>
+        Title="Mini-Stores" Height="630" Width="730" WindowStartupLocation="CenterScreen">
+
+    <StackPanel Background="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
 
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Exit" Click="ExitButton"/>
+            <MenuItem Header="{Binding [File].LangText}">
+                <MenuItem Header="Setting" Click="SettingButton"/>
+                <MenuItem Header="{Binding [Exit].LangText}" Click="ExitButton"/>
             </MenuItem>
-            <MenuItem Header="_Import">
-                <MenuItem Header="Parts" Click="ImportPartButton" />
-                <MenuItem Header="Types" Click="ImportTypeButton" />
-                <MenuItem Header="Manufacturers" Click="ImportManuButton"/>
-                <MenuItem Header="Locations" Click="ImportLocButton"/>
-                <MenuItem Header="Positions" Click="ImportPosButton"/>
+
+            <MenuItem Header="{Binding [Import].LangText}">
+                <MenuItem Header="{Binding [Parts].LangText}"         Click="ImportPartButton"/>
+                <MenuItem Header="{Binding [Types].LangText}"         Click="ImportTypeButton"/>
+                <MenuItem Header="{Binding [Manufacturers].LangText}" Click="ImportManuButton"/>
+                <MenuItem Header="{Binding [Locations].LangText}"     Click="ImportLocButton"/>
+                <MenuItem Header="{Binding [Positions].LangText}"     Click="ImportPosButton"/>
             </MenuItem>
-            <MenuItem Header="_Export">
-                <MenuItem Header="Parts" Click="ExportPartButton"/>
-                <MenuItem Header="Types" Click="ExportTypeButton"/>
-                <MenuItem Header="Manufacturers" Click="ExportManuButton"/>
-                <MenuItem Header="Locations" Click="ExportLocButton"/>
-                <MenuItem Header="Positions" Click="ExportPosButton"/>
+            
+            <MenuItem Header="{Binding [Export].LangText}">
+                <MenuItem Header="{Binding [Parts].LangText}"         Click="ExportPartButton"/>
+                <MenuItem Header="{Binding [Types].LangText}"         Click="ExportTypeButton"/>
+                <MenuItem Header="{Binding [Manufacturers].LangText}" Click="ExportManuButton"/>
+                <MenuItem Header="{Binding [Locations].LangText}"     Click="ExportLocButton"/>
+                <MenuItem Header="{Binding [Positions].LangText}"     Click="ExportPosButton"/>
             </MenuItem>
-            <MenuItem Header="About">
-                <MenuItem Header="Help" Click="HelpButton"/>
+            
+            <MenuItem Header="{Binding [Help].LangText}">
+                <MenuItem Header="{Binding [ViewHelp].LangText}" Click="HelpButton"/>
+                <MenuItem Header="{Binding [AboutMiniStores].LangText}" Click="AboutButton"/>
             </MenuItem>
         </Menu>
 
@@ -43,151 +48,247 @@
             <Label Grid.Column="1" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center" 
                    VerticalAlignment="Center">Mini Stores</Label>
         </Grid>
-        
-        <TabControl x:Name="tbMaster"  Margin="10,10,10,10">
 
-        <TabItem Name="tbPart" Header="Part">
-            <Grid HorizontalAlignment="Left" Width="670">
+        <TabControl x:Name="tbMaster"  Margin="10,10,10,10" >
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <TabItem x:Name="tiSearch" Header="{Binding [Search].LangText}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="105"/>
+                        <!-- Parts -->
+                        <ColumnDefinition Width="105"/>
+                        <!-- Types -->
+                        <ColumnDefinition Width="265"/>
+                        <!-- Manufacturers -->
+                        <ColumnDefinition Width="105"/>
+                        <!-- Locations -->
+                        <ColumnDefinition Width="105"/>
+                        <!-- Positions -->
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Margin="10 10">
-                    <Label Content="Part Name:" />
-                    <TextBox x:Name="PartName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
-                    <Label Content="Quantity:"/>
-                    <TextBox x:Name="PartQty" Text="0" HorizontalAlignment="Left"  Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Foreground="#FF080808" Background="#FFF7F5F5"/>
-                    <Label x:Name="TypeL" Content="Type:" />
-                    <ComboBox x:Name="TypeCB"  HorizontalAlignment="Left" Width="160" SelectionChanged="TypeCB_Changed"/>
-                    <Label x:Name="ManufacturerL" Content="Manufacturer:" />
-                    <ComboBox x:Name="ManufacturerCB"  HorizontalAlignment="Left" Width="160" SelectionChanged="ManufacturerCB_Changed" />
-                    <Label x:Name="LocationL" Content="Location:" />
-                    <ComboBox x:Name="LocationCB"  HorizontalAlignment="Left" Width="160" SelectionChanged="LocationCB_Changed"/>
-                    <Label x:Name="PositionL" Content="Position:" />
-                    <ComboBox x:Name="PositionCB"  HorizontalAlignment="Left" Width="160" SelectionChanged="PositionCB_Changed"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height ="25"/>
+                        <!-- Header Row -->
+                        <RowDefinition Height ="25"/>
+                        <!-- Search Details -->
+                        <RowDefinition Height ="25"/>
+                        <!-- Query -->
+                        <RowDefinition Height ="*"/>
+                        <!-- DataGrid -->
+                    </Grid.RowDefinitions>
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                         </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="{Binding [Part].LangText}" />
+                    <Label Grid.Column="1" Grid.Row="0" Content="{Binding [Type].LangText}" />
+                    <Label Grid.Column="2" Grid.Row="0" Content="{Binding [Manufacturer].LangText}" />
+                    <Label Grid.Column="3" Grid.Row="0" Content="{Binding [Location].LangText}" />
+                    <Label Grid.Column="4" Grid.Row="0" Content="{Binding [Position].LangText}" />
+
+                    <TextBox x:Name="tbSearchPart" Grid.Column="0" Grid.Row="1" TextChanged="tbSearchPart_Changed"/>
+                    <ComboBox x:Name="cbSearchType" Grid.Column="1" Grid.Row="1" SelectionChanged="cbSearchType_Changed"/>
+                    <ComboBox x:Name="cbSearchManu" Grid.Column="2" Grid.Row="1" SelectionChanged="cbSearchManu_Changed"/>
+                    <ComboBox x:Name="cbSearchLoc" Grid.Column="3" Grid.Row="1" SelectionChanged="cbSearchLoc_Changed"/>
+                    <ComboBox x:Name="cbSearchPos" Grid.Column="4" Grid.Row="1" SelectionChanged="cbSearchPos_Changed"/>
+
+                    <Label x:Name="lblSearchText" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="5" 
+                           Foreground="Blue" HorizontalAlignment="Center"/>
+
+                    <DataGrid Name="dgSearch" ItemsSource="{Binding Path=query}"
+                              AutoGenerateColumns="False" 
+                              Height="Auto" Width="Auto" 
+                              VerticalScrollBarVisibility="Visible" 
+                              CanUserAddRows="False"
+                              Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" 
+                              Background="Transparent"
+                              AlternatingRowBackground="LightBlue" 
+                              SelectedCellsChanged="DateGrid_Selected"
+                           >
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="PId" Header="Id"   Width="10"
+                                        Binding="{Binding Path=PId}"  IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="PName" Header="Part"   Width="100"
+                                        Binding="{Binding Path=PName}"  IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="PType" Header="Type"   Width="100"
+                                        Binding="{Binding Path=PType}"  IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="PQty" Header="Qty"   Width="35"
+                                        Binding="{Binding Path=PQty}"  IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="PManu" Header="Manufacturer"   Width="215"
+                                        Binding="{Binding Path=PManu}"  IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="PLoc" Header="Location"   Width="85"
+                                        Binding="{Binding Path=PLoc}"  IsReadOnly="True" />
+                            <DataGridTextColumn x:Name="PPos" Header="Position"   Width="85"
+                                        Binding="{Binding Path=PPos}"  IsReadOnly="True" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+
+            </TabItem>
+
+
+            <TabItem Name="tiPart" Header="{Binding [Part].LangText}">
+                <StackPanel>
+                    <Grid HorizontalAlignment="Left" Width="670">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
 
-                            <Button Grid.Row="0" Grid.Column="0" x:Name="AddPart" Content="Add Part" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="AddPartButton"/>
-                            <Button Grid.Row="0" Grid.Column="1" x:Name="UpdatePart" Content="Update Part" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="UpdatePartButton"/>
-                            <Button Grid.Row="1" Grid.Column="0" x:Name="RefreshList" Content="Refresh List" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="RefreshPartsButton"/>
-                            <Button Grid.Row="1" Grid.Column="1" x:Name="DeletePart" Content="Delete Part" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="DeletePartButton"/>
-                            <Button Grid.Row="2" Grid.Column="0" x:Name="ImportPart" Content="Import Part" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ImportPartButton" />
-                            <Button Grid.Row="2" Grid.Column="1" x:Name="ExportPart" Content="Export Part" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ExportPartButton" />
-                    </Grid>
-                    
-                </StackPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="25" />
+                        </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="1" Margin="10 10">
-                    <Label x:Name="PartsL" Content="Parts List:"  FontWeight="Bold"/>
-                    <ListBox x:Name="PartsListLB" HorizontalAlignment="Left" Height="250" Width="240"
-                             d:ItemsSource="{d:SampleData ItemCount=10}" SelectionChanged="PartSelectedListBox"/>
+                        <Label Content="{Binding [PartId].LangText}"  Grid.Row="0" Grid.Column="0"/>
+                        <Label x:Name="lblPartId"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"  VerticalAlignment="Top" />
+
+                        <Label Content="{Binding [PartName].LangText}" Grid.Row="1" Grid.Column="0" />
+                        <TextBox x:Name="tbPartName" Text="xXx" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
+
+                        <Label Content="{Binding [Quantity].LangText}" Grid.Row="2" Grid.Column="0"/>
+                        <TextBox x:Name="tbPartQty" Text="0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"  Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Foreground="#FF080808" Background="#FFF7F5F5"/>
+
+                        <Label x:Name="lblType" Content="{Binding [TypeM].LangText}" Grid.Row="3" Grid.Column="0"/>
+                        <ComboBox x:Name="cbType"  Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="160" SelectionChanged="TypeCB_Changed" Foreground="#FF080808" Background="#FFF7F5F5"/>
+
+                        <Label x:Name="lblManufacturer" Content="{Binding [ManufacturerM].LangText}" Grid.Row="4" Grid.Column="0" />
+                        <ComboBox x:Name="cbManufacturer"  Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Width="160" SelectionChanged="ManufacturerCB_Changed" Foreground="#FF080808" Background="#FFF7F5F5"/>
+
+                        <Label x:Name="lblLocation" Content="{Binding [LocationM].LangText}" Grid.Row="5" Grid.Column="0" />
+                        <ComboBox x:Name="cbLocation"  Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="160" SelectionChanged="LocationCB_Changed" Foreground="#FF080808" Background="#FFF7F5F5"/>
+
+                        <Label x:Name="lblPosition" Content="{Binding [PositionM].LangText}" Grid.Row="6" Grid.Column="0"/>
+                        <ComboBox x:Name="cbPosition"  Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="160" SelectionChanged="PositionCB_Changed" Foreground="#FF080808" Background="#FFF7F5F5"/>
+
+                        <Label Content="{Binding [Price].LangText}" Grid.Row="7" Grid.Column="0"/>
+                        <TextBox x:Name="tbPrice"  Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Width="160" Foreground="#FF080808" Background="#FFF7F5F5"/>
+
+                        <Label Content="{Binding [Comment].LangText}" Grid.Row="8" Grid.Column="0"/>
+                        <TextBox x:Name="tbComment"  Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" Width="160" Height="75" Foreground="#FF080808" Background="#FFF7F5F5" TextWrapping="Wrap" Grid.RowSpan="3"/>
+
+
+                        <Label x:Name="lblParts" Content="{Binding [PartList].LangText}"  Grid.Row="0" Grid.Column="2" FontWeight="Bold"/>
+                       <ListBox x:Name="lbPartsList" Grid.Row="1" Grid.Column="2" Grid.RowSpan="15" HorizontalAlignment="Left" Height="290" Width="260"
+                         d:ItemsSource="{d:SampleData ItemCount=12}" SelectionChanged="PartSelectedListBox"/>
+                    </Grid>
 
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" Content="Part Id:" />
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="PartIdL"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
-
+                        <Button Grid.Row="0" Grid.Column="0" x:Name="btnAddPart" Content="{Binding [Add].LangText}" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="AddPartButton"/>
+                        <Button Grid.Row="0" Grid.Column="1" x:Name="btnUpdatePart" Content="{Binding [Update].LangText}" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="UpdatePartButton"/>
+                        <Button Grid.Row="0" Grid.Column="3" x:Name="btnDeletePart" Content="{Binding [Delete].LangText}" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="DeletePartButton"/>
+                        <Button Grid.Row="1" Grid.Column="0" x:Name="btnClearPart" Content="{Binding [Clear].LangText}" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="ClearPartButton"/>
+                        <Button Grid.Row="1" Grid.Column="1" x:Name="btnRefreshList" Content="{Binding [Refresh].LangText}" HorizontalAlignment="Center" Height="30"  Width="125" Margin="5 5" Click="RefreshPartsButton"/>
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="btnImportPart" Content="{Binding [Import].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ImportPartButton" />
+                        <Button Grid.Row="1" Grid.Column="3" x:Name="btnExportPart" Content="{Binding [Export].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ExportPartButton" />
                     </Grid>
                 </StackPanel>
-            </Grid>
-        </TabItem>
 
-        <TabItem Name="tbType" Header="Type">
+            </TabItem>
 
-            <Grid HorizontalAlignment="Left" Width="670">
+            <TabItem Name="tiType" Header="{Binding [Type].LangText}" >
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Margin="10,10,10,10">
-                    <Label Content="Type Name:" />
-                    <TextBox x:Name="TypeName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
-
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                <StackPanel>
+                    <Grid HorizontalAlignment="Left" Width="670">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Row="0" Grid.Column="0" x:Name="AddType" Content="Add Type" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="AddTypeButton" />
-                        <Button Grid.Row="0" Grid.Column="1" x:Name="UpdateType" Content="Update Type" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="UpdateTypeButton" />
-                        <Button Grid.Row="1" Grid.Column="0" x:Name="RefreshTypeList" Content="Refresh Type" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="RefreshTypesButton" />
-                        <Button Grid.Row="1" Grid.Column="1" x:Name="DeleteType" Content="Delete Type" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="DeleteTypeButton" />
-                        <Button Grid.Row="2" Grid.Column="0" x:Name="ImportType" Content="Import Type" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ImportTypeButton" />
-                        <Button Grid.Row="2" Grid.Column="1" x:Name="ExportType" Content="Export Type" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ExportTypeButton" />
-                    </Grid>
+                        <StackPanel Grid.Column="0" Margin="10,10,10,10">
+                            <Label Content="{Binding [TypeId].LangText}" />
+                            <Label x:Name="lblTypeId"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
 
-                </StackPanel>
+                            <Label Content="{Binding [TypeName].LangText}" />
+                            <TextBox x:Name="tbTypeName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
+                        </StackPanel>
 
-                <StackPanel Grid.Column="1" Margin="10,10,10,10">
-                    <Label x:Name="TypesL" Content="Type List:"  FontWeight="Bold"/>
-                    <ListBox x:Name="TypesListLB" HorizontalAlignment="Left" Height="208" Width="240"
+                        <StackPanel Grid.Column="1" Margin="10,10,10,10">
+                            <Label x:Name="lblTypes" Content="{Binding [TypeList].LangText}"  FontWeight="Bold"/>
+                            <ListBox x:Name="lbTypesList" HorizontalAlignment="Left" Height="208" Width="240"
                              d:ItemsSource="{d:SampleData ItemCount=10}" SelectionChanged="TypeSelectedListBox"/>
 
+                        </StackPanel>
+                    </Grid>
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0" x:Name="btnAddType"         Content="{Binding [Add].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="AddTypeButton" />
+                        <Button Grid.Row="0" Grid.Column="1" x:Name="btnUpdateType"      Content="{Binding [Update].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="UpdateTypeButton" />
+                        <Button Grid.Row="0" Grid.Column="3" x:Name="btnDeleteType"      Content="{Binding [Delete].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="DeleteTypeButton" />
+                        <Button Grid.Row="1" Grid.Column="0" x:Name="btnClearType"       Content="{Binding [Clear].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ClearTypeButton" />
+                        <Button Grid.Row="1" Grid.Column="1" x:Name="btnRefreshTypeList" Content="{Binding [Refresh].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="RefreshTypesButton" />
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="btnImportType"      Content="{Binding [Import].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ImportTypeButton" />
+                        <Button Grid.Row="1" Grid.Column="3" x:Name="btnExportType"      Content="{Binding [Export].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ExportTypeButton" />
+                    </Grid>
+
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiManu" Header="{Binding [Manufacturer].LangText}" >
+
+                <StackPanel>
+                    <Grid HorizontalAlignment="Left" Width="670">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" Content="Type Id:" />
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="TypeIdL"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                        <StackPanel Grid.Column="0" Margin="10,10,10,10">
+                            <Label Content="{Binding [ManufacturerId].LangText}" />
+                            <Label x:Name="lblManuId"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                            <Label Content="{Binding [ManufacturerName].LangText}" />
+                            <TextBox x:Name="tbManuName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="10,10,10,10">
+                            <Label x:Name="lblManus" Content="{Binding [ManufacturerList].LangText}"  FontWeight="Bold"/>
+                            <ListBox x:Name="lbManusList" HorizontalAlignment="Left" Height="208" Width="240"
+                                 d:ItemsSource="{d:SampleData ItemCount=10}" SelectionChanged="ManuSelectedListBox"/>
+                        </StackPanel>
 
                     </Grid>
-                </StackPanel>
-            </Grid>
-
-        </TabItem>
-
-        <TabItem Name="tbManu" Header="Manufacturer">
-
-            <Grid HorizontalAlignment="Left" Width="670">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Margin="10,10,10,10">
-                    <Label Content="Manufacturer:" />
-                    <TextBox x:Name="ManuName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
 
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
@@ -195,161 +296,124 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Button Grid.Row="0" Grid.Column="0" x:Name="AddManu" Content="Add Manufacturer" HorizontalAlignment="Left" Height="30"  Width="126" Margin="16,5,0,5" Click="AddManuButton"  />
-                        <Button Grid.Row="0" Grid.Column="2" x:Name="UpdateManu" Content="Update Manufacturer" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="UpdateManuButton" />
-                        <Button Grid.Row="1" Grid.Column="0" x:Name="RefreshManuList" Content="Refresh Manufacturer" HorizontalAlignment="Left" Height="30"  Width="126" Margin="16,5,0,5" Click="RefreshManusButton" />
-                        <Button Grid.Row="1" Grid.Column="2" x:Name="DeleteManu" Content="Delete Manufacturer" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="DeleteManuButton" />
-                        <Button Grid.Row="2" Grid.Column="0" x:Name="ImportManu" Content="Import Manufacturer" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ImportManuButton" />
-                        <Button Grid.Row="2" Grid.Column="1" x:Name="ExportManu" Content="Export Manufacturer" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ExportManuButton" />
-
-                    </Grid>
-
-                </StackPanel>
-
-                <StackPanel Grid.Column="1" Margin="10,10,10,10">
-                    <Label x:Name="ManusL" Content="Manufacturer List:"  FontWeight="Bold"/>
-                    <ListBox x:Name="ManusListLB" HorizontalAlignment="Left" Height="208" Width="240"
-                             d:ItemsSource="{d:SampleData ItemCount=10}" SelectionChanged="ManuSelectedListBox"/>
-
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" Content="Manufacturer Id:" />
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="ManuIdL"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
-
+                        <Button Grid.Row="0" Grid.Column="0" x:Name="btnAddManu"         Content="{Binding [Add].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="AddManuButton"  />
+                        <Button Grid.Row="0" Grid.Column="1" x:Name="btnUpdateManu"      Content="{Binding [Update].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="UpdateManuButton" />
+                        <Button Grid.Row="0" Grid.Column="3" x:Name="btnDeleteManu"      Content="{Binding [Delete].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="DeleteManuButton" />
+                        <Button Grid.Row="1" Grid.Column="0" x:Name="btnClearManu"       Content="{Binding [Clear].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ClearManuButton" />
+                        <Button Grid.Row="1" Grid.Column="1" x:Name="btnRefreshManuList" Content="{Binding [Refresh].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="RefreshManusButton" />
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="btnImportManu"      Content="{Binding [Import].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ImportManuButton" />
+                        <Button Grid.Row="1" Grid.Column="3" x:Name="btnExportManu"      Content="{Binding [Export].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ExportManuButton" />
                     </Grid>
+
                 </StackPanel>
-            </Grid>
+            </TabItem>
 
-        </TabItem>
+            <TabItem Name="tiLocation" Header="{Binding [Location].LangText}">
 
-        <TabItem Name="tbLocation" Header="Location">
-            <Grid HorizontalAlignment="Left" Width="670">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Margin="10,10,10,10">
-                    <Label Content="Location:" />
-                    <TextBox x:Name="LocName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
-
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                <StackPanel>
+                    <Grid HorizontalAlignment="Left" Width="670">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Row="0" Grid.Column="0" x:Name="AddLoc" Content="Add Location" HorizontalAlignment="Left" Height="30"  Width="126" Margin="16,5,0,5" Click="AddLocButton"  />
-                        <Button Grid.Row="0" Grid.Column="2" x:Name="UpdateLoc" Content="Update Location" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="UpdateLocButton" />
-                        <Button Grid.Row="1" Grid.Column="0" x:Name="RefreshLocList" Content="Refresh Location" HorizontalAlignment="Left" Height="30"  Width="126" Margin="16,5,0,5" Click="RefreshLocsButton" />
-                        <Button Grid.Row="1" Grid.Column="2" x:Name="DeleteLoc" Content="Delete Location" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="DeleteLocButton" />
-                        <Button Grid.Row="2" Grid.Column="0" x:Name="ImportLoc" Content="Import Location" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ImportLocButton" />
-                        <Button Grid.Row="2" Grid.Column="1" x:Name="ExportLoc" Content="Export Location" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ExportLocButton" />
-                    </Grid>
+                        <StackPanel Grid.Column="0" Margin="10,10,10,10">
+                            <Label Content="{Binding [LocationId].LangText}" />
+                            <Label x:Name="lblLocId"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
 
-                </StackPanel>
+                            <Label Content="{Binding [LocationName].LangText}" />
+                            <TextBox x:Name="tbLocName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
+                        </StackPanel>
 
-                <StackPanel Grid.Column="1" Margin="10,10,10,10">
-                    <Label x:Name="LocsL" Content="Location List:"  FontWeight="Bold"/>
-                    <ListBox x:Name="LocsListLB" HorizontalAlignment="Left" Height="208" Width="240"
+                        <StackPanel Grid.Column="1" Margin="10,10,10,10">
+                            <Label x:Name="lblLocs" Content="{Binding [LocationList].LangText}"  FontWeight="Bold"/>
+                            <ListBox x:Name="lbLocsList" HorizontalAlignment="Left" Height="208" Width="240"
                              d:ItemsSource="{d:SampleData ItemCount=10}" SelectionChanged="LocSelectedListBox"/>
-
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Label Grid.Row="0" Grid.Column="0" Content="Location Id:" />
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="LocIdL"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
-
+                        </StackPanel>
                     </Grid>
-                </StackPanel>
-            </Grid>
-
-        </TabItem>
-
-        <TabItem Name="tbPosition" Header="Position">
-            <Grid HorizontalAlignment="Left" Width="670">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Margin="10,10,10,10">
-                    <Label x:Name="LocL" Content="Location:" />
-                    <ComboBox x:Name="LocCB"  HorizontalAlignment="Left" Width="160" SelectionChanged="LocCB_Changed"/>
-                    <Label Content="Position:" />
-                    <TextBox x:Name="PosName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
 
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Row="0" Grid.Column="0" x:Name="AddPos" Content="Add Position" HorizontalAlignment="Left" Height="30"  Width="126" Margin="16,5,0,5" Click="AddPosButton"  />
-                        <Button Grid.Row="0" Grid.Column="2" x:Name="UpdatePos" Content="Update Position" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="UpdatePosButton" />
-                        <Button Grid.Row="1" Grid.Column="0" x:Name="RefreshPosList" Content="Refresh Position" HorizontalAlignment="Left" Height="30"  Width="126" Margin="16,5,0,5" Click="RefreshPossButton" />
-                        <Button Grid.Row="1" Grid.Column="2" x:Name="DeletePos" Content="Delete Position" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="DeletePosButton" />
-                        <Button Grid.Row="2" Grid.Column="0" x:Name="ImportPos" Content="Import Position" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ImportPosButton" />
-                        <Button Grid.Row="2" Grid.Column="1" x:Name="ExportPos" Content="Export Location" HorizontalAlignment="Center" Height="30"  Width="126" Margin="0,5,0,5" Click="ExportPosButton" />
+                        <Button Grid.Row="0" Grid.Column="0" x:Name="btnAddLoc"          Content="{Binding [Add].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="AddLocButton"  />
+                        <Button Grid.Row="0" Grid.Column="1" x:Name="btnUpdateLoc"       Content="{Binding [Update].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="UpdateLocButton" />
+                        <Button Grid.Row="0" Grid.Column="3" x:Name="btnDeleteLoc"       Content="{Binding [Delete].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="DeleteLocButton" />
+                        <Button Grid.Row="1" Grid.Column="0" x:Name="btnClearLoc"        Content="{Binding [Clear].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ClearLocButton" />
+                        <Button Grid.Row="1" Grid.Column="1" x:Name="btnRefreshLocList"  Content="{Binding [Refresh].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="RefreshLocsButton" />
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="btnImportLoc"       Content="{Binding [Import].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ImportLocButton" />
+                        <Button Grid.Row="1" Grid.Column="3" x:Name="btnExportLoc"       Content="{Binding [Export].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ExportLocButton" />
                     </Grid>
 
                 </StackPanel>
+            </TabItem>
 
-                <StackPanel Grid.Column="1" Margin="10,10,10,10">
-                    <Label x:Name="PossL" Content="Position List:"  FontWeight="Bold"/>
-                    <ListBox x:Name="PossListLB" HorizontalAlignment="Left" Height="208" Width="240"
-                             d:ItemsSource="{d:SampleData ItemCount=10}" SelectionChanged="PosSelectedListBox"/>
+            <TabItem Name="tiPosition" Header="{Binding [Position].LangText}">
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                <StackPanel>
+                    <Grid HorizontalAlignment="Left" Width="670">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" Content="Position Id:" />
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="PosIdL"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                        <StackPanel Grid.Column="0" Margin="10,10,10,10">
+                            <Label Content="{Binding [PositionId].LangText}" />
+                            <Label x:Name="lblPosId"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                            <Label x:Name="lblLoc" Content="{Binding [LocationM].LangText}" />
+                            <ComboBox x:Name="cbLoc"  HorizontalAlignment="Left" Width="160" SelectionChanged="LocCB_Changed"/>
+                            <Label Content="{Binding [PositionName].LangText}" />
+                            <TextBox x:Name="tbPosName" Text="xXx" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
+                        </StackPanel>
 
+                        <StackPanel Grid.Column="1" Margin="10,10,10,10">
+                            <Label x:Name="lblPoss" Content="{Binding [PositionList].LangText}"  FontWeight="Bold"/>
+                            <ListBox x:Name="lbPossList" HorizontalAlignment="Left" Height="208" Width="240"
+                             d:ItemsSource="{d:SampleData ItemCount=10}" SelectionChanged="PosSelectedListBox"/>
+                        </StackPanel>
                     </Grid>
-                </StackPanel>
-            </Grid>
 
-        </TabItem>
-    </TabControl>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0" x:Name="btnAddPos"         Content="{Binding [Add].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="AddPosButton"  />
+                        <Button Grid.Row="0" Grid.Column="1" x:Name="btnUpdatePos"      Content="{Binding [Update].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="UpdatePosButton" />
+                        <Button Grid.Row="0" Grid.Column="3" x:Name="btnDeletePos"      Content="{Binding [Delete].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="DeletePosButton" />
+                        <Button Grid.Row="1" Grid.Column="0" x:Name="btnClearPos"       Content="{Binding [Clear].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ClearPosButton" />
+                        <Button Grid.Row="1" Grid.Column="1" x:Name="btnRefreshPosList" Content="{Binding [Refresh].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="RefreshPossButton" />
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="btnImportPos"      Content="{Binding [Import].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ImportPosButton" />
+                        <Button Grid.Row="1" Grid.Column="3" x:Name="btnExportPos"      Content="{Binding [Export].LangText}" HorizontalAlignment="Center" Height="30"  Width="126" Margin="5 5" Click="ExportPosButton" />
+                    </Grid>
+
+                </StackPanel>
+            </TabItem>
+
+        </TabControl>
     </StackPanel>
 
 </Window>

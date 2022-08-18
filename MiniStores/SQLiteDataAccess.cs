@@ -37,6 +37,8 @@ namespace MiniStores
                     ", ManufacturerFK = " + part.ManufacturerFK.ToString() + " " +
                     ", LocationFK = " + part.LocationFK.ToString() + " " +
                     ", PositionFK = " + part.PositionFK.ToString() + " " +
+                    ", Price = " + part.Price + " " +
+                    ", Comment = \"" + part.Comment + "\" " +
                     "where PartsId = " + part.PartsId.ToString();
 
                 cnn.Execute(UpdateText, new DynamicParameters());
@@ -47,8 +49,8 @@ namespace MiniStores
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                cnn.Execute("insert into Parts (PartName, TypeFK, Quantity, ManufacturerFK, LocationFK, PositionFK) " +
-                    "values (@PartName, @TypeFK, @Quantity, @ManufacturerFK, @LocationFK, @PositionFK)", part);
+                cnn.Execute("insert into Parts (PartName, TypeFK, Quantity, ManufacturerFK, LocationFK, PositionFK, Price, Comment) " +
+                    "values (@PartName, @TypeFK, @Quantity, @ManufacturerFK, @LocationFK, @PositionFK, @Price, @Comment)", part);
             }
         }
         // ************************************************
@@ -56,7 +58,7 @@ namespace MiniStores
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                var output = cnn.Query<PartsModel>("select * from Parts where PartId = " + id.ToString(), new DynamicParameters());
+                var output = cnn.Query<PartsModel>("select * from Parts where PartsId = " + id.ToString(), new DynamicParameters());
 
                 return output.ToList();
             }
@@ -69,6 +71,17 @@ namespace MiniStores
                 var output = cnn.Query<PartsModel>("delete from Parts where PartsId = " + id.ToString(), new DynamicParameters());
             }
         }
+        // ************************************************
+        public static List<PartsModel> SearchParts(string SearchQurey)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = cnn.Query<PartsModel>(SearchQurey, new DynamicParameters());
+
+                return output.ToList();
+            }
+        }
+
         // ************************************************
         // ************************************************
         public static List<TypeModel> LoadTypes()

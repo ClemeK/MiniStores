@@ -4,46 +4,260 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
+/*
+* Title:    MiniStores
+* Author:   Kelvin Clements
+* Date:     23 June 2022
+* Purpose:  Hobby Inventory Application
+* 
+* Developer's Note's
+* ==================
+* + Hungarian Notation is used for object in the UI.
+* + 
+* + 
+* 
+* Developer's Log
+* ===============
+* + 17-Aug-2022 - Added Setting screen.
+* + 15-Aug-2022 - Made App Multi-Lingual
+* + 09-Aug-2022 - Added INI file to save the settings (INIFile.cs).
+* + 01-Aug-2022 - Added About screen.
+* + 22-Jul-2022 - Added Simple Error logging (JobLog.cs). 
+* + 17-Jul-2022 - Added a Help Screen\File.
+* + 27-Jul-2022 - Added SQLite as a DB as I can not get the MS-SQL to work on my machine.
+* + 23-Jun-2022 - Applications Created.
+*/
+
 namespace MiniStores
 {
     public partial class MainWindow : Window
     {
+        // Global Objects ...
         List<PartsModel> Parts = new List<PartsModel>();
         List<TypeModel> Types = new List<TypeModel>();
         List<ManufacturerModel> Manufacturers = new List<ManufacturerModel>();
         List<LocationModel> Locations = new List<LocationModel>();
         List<PositionModel> Positions = new List<PositionModel>();
+
         List<PositionModel> PosSubSet = new List<PositionModel>();
 
+        Dictionary<string, PharseText> ScreenText = new Dictionary<string, PharseText>();
+        GlobalSetting gs = new GlobalSetting();
+
+        Joblog errorlog = new Joblog("MiniStore", GlobalSetting.LogsToKeep);
+        // ************************************************
+        // ***      M A I N   W I N D O W
         public MainWindow()
         {
+            LanguageData AppLanguage = new LanguageData(errorlog, GlobalSetting.Language);
+
+            ScreenText = AppLanguage.GetLanguage();
+            DataContext = ScreenText;
+
             InitializeComponent();
 
-            RefreshPartsLB();
-            AddPart.IsEnabled = true;
-            UpdatePart.IsEnabled = false;
-            DeletePart.IsEnabled = false;
-
+            // Refresh the different Lists
             RefreshTypesLB();
-            AddType.IsEnabled = true;
-            UpdateType.IsEnabled = false;
-            DeleteType.IsEnabled = false;
-
             RefreshManusLB();
-            AddManu.IsEnabled = true;
-            UpdateManu.IsEnabled = false;
-            DeleteManu.IsEnabled = false;
-
             RefreshLocsLB();
-            AddLoc.IsEnabled = true;
-            UpdateLoc.IsEnabled = false;
-            DeleteLoc.IsEnabled = false;
-
+            // Need to be installed after The Location
             UpdateLocPoss();
             RefreshPossLB();
-            AddPos.IsEnabled = true;
-            UpdatePos.IsEnabled = false;
-            DeletePos.IsEnabled = false;
+            // Needs to be installed after EVERYTHING else
+            RefreshPartsLB();
+
+            // Set-up the different Tab Buttons
+            btnAddType.IsEnabled = true;
+            btnUpdateType.IsEnabled = false;
+            btnDeleteType.IsEnabled = false;
+
+            btnAddManu.IsEnabled = true;
+            btnUpdateManu.IsEnabled = false;
+            btnDeleteManu.IsEnabled = false;
+
+            btnAddLoc.IsEnabled = true;
+            btnUpdateLoc.IsEnabled = false;
+            btnDeleteLoc.IsEnabled = false;
+
+            btnAddPos.IsEnabled = true;
+            btnUpdatePos.IsEnabled = false;
+            btnDeletePos.IsEnabled = false;
+
+            btnAddPart.IsEnabled = true;
+            btnUpdatePart.IsEnabled = false;
+            btnDeletePart.IsEnabled = false;
+
+            //Translate Search grid text
+            PId.Header = LookUpTranslation("Id");
+            PName.Header = LookUpTranslation("Part");
+            PType.Header = LookUpTranslation("Type");
+            PQty.Header = LookUpTranslation("Qty");
+            PManu.Header = LookUpTranslation("Manufacturer");
+            PLoc.Header = LookUpTranslation("Location");
+            PPos.Header = LookUpTranslation("Position");
+
+            errorlog.InformationMessage("Program Initialised");
+        }
+        // ************************************************
+        // ***      S E A R C H
+        private void Search_Changed()
+        {
+            List<PartsModel> QueryResults = new List<PartsModel>();
+            List<ColumnTable> query = new List<ColumnTable>();
+
+            bool FirstConditionSet = false;
+            string SearchQuery = "select * from Parts where";
+
+            // Re-Build the Query String
+            if (tbSearchPart.Text != "")
+            {
+                SearchQuery += " PartName like \'%" + tbSearchPart.Text + "%\'";
+                FirstConditionSet = true;
+            }
+
+            if (cbSearchType.SelectedIndex > 0)
+            {
+                if (FirstConditionSet == true)
+                {
+                    SearchQuery += " and ";
+                }
+                SearchQuery += " TypeFK = \'" + FindType(cbSearchType.SelectedValue.ToString()).ToString() + "\'";
+                FirstConditionSet = true;
+            }
+
+
+            if (cbSearchManu.SelectedIndex > 0)
+            {
+                if (FirstConditionSet == true)
+                {
+                    SearchQuery += " and ";
+                }
+                SearchQuery += " ManufacturerFK = \'" + FindManu(cbSearchManu.SelectedValue.ToString()).ToString() + "\'";
+                FirstConditionSet = true;
+            }
+
+            if (cbSearchLoc.SelectedIndex > 0)
+            {
+                if (FirstConditionSet == true)
+                {
+                    SearchQuery += " and ";
+                }
+                SearchQuery += " LocationFK = \'" + FindLocation(cbSearchLoc.SelectedValue.ToString()).ToString() + "\'";
+                FirstConditionSet = true;
+            }
+
+            if (cbSearchLoc.SelectedIndex > 0
+                && cbSearchPos.SelectedIndex > 0)
+            {
+                if (FirstConditionSet == true)
+                {
+                    SearchQuery += " and ";
+                }
+                SearchQuery += " PositionFK = \'" +
+                    FindPosition(FindLocation(cbSearchLoc.SelectedValue.ToString()),
+                    cbSearchPos.SelectedValue.ToString()).ToString() + "\'";
+            }
+
+            if (SearchQuery != "select * from Parts where")
+            {
+                // Get the Search Results
+                QueryResults = SQLiteDataAccess.SearchParts(SearchQuery);
+
+                if (QueryResults.Count > 0)
+                {
+                    // convert Foreign Keys to Text
+                    foreach (var item in QueryResults)
+                    {
+                        ColumnTable dt = new ColumnTable();
+
+                        dt.PId = item.PartsId.ToString();
+                        dt.PName = item.PartName;
+                        dt.PType = LookupType(item.TypeFK);
+                        dt.PQty = item.Quantity.ToString();
+                        dt.PManu = LookupManu(item.ManufacturerFK);
+                        dt.PLoc = LookupLocation(item.LocationFK);
+                        dt.PPos = LookupPosition(item.LocationFK, item.PositionFK);
+
+                        query.Add(dt);
+                    }
+                }
+            }
+
+            if (GlobalSetting.DebugApp == true)
+            {
+                lblSearchText.Content = SearchQuery + " (" + QueryResults.Count + ")";
+            }
+
+            // Read the list and add to the query to display in the DataGrid
+            dgSearch.ItemsSource = query;
+        }
+        // ****
+        private void tbSearchPart_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            Search_Changed();
+        }
+        // ****
+        private void cbSearchType_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            Search_Changed();
+        }
+        // ****
+        private void cbSearchManu_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            Search_Changed();
+        }
+        // ****
+        private void cbSearchPos_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            Search_Changed();
+        }
+        // ****
+        private void cbSearchLoc_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            UpdateSLocPoss();
+            Search_Changed();
+        }
+        // ****
+        private void UpdateSLocPoss()
+        {
+            int index = FindLocation((string)cbSearchLoc.SelectedValue);
+
+            PosSubSet.Clear();
+
+            if (index > 0)
+            {
+                PosSubSet = SQLiteDataAccess.GetPositions(index);
+
+                PosSubSet.Sort((x, y) => x.PositionName.CompareTo(y.PositionName));
+            }
+
+            WireUpSPosCB();
+        }
+        // ****
+        private void WireUpSPosCB()
+        {
+            cbSearchPos.Items.Clear();
+
+            foreach (var p in PosSubSet)
+            {
+                cbSearchPos.Items.Add(p.PositionName);
+            }
+        }
+        // ****
+        private void DateGrid_Selected(object sender, System.Windows.Controls.SelectedCellsChangedEventArgs e)
+        {
+            int index = dgSearch.SelectedIndex;
+
+            if (index >= -1)
+            {
+                DataGridRow row = (DataGridRow)dgSearch.ItemContainerGenerator.ContainerFromIndex(index);
+
+                ColumnTable drv = (ColumnTable)dgSearch.SelectedItem;
+
+                int selectId = int.Parse(drv.PId);
+
+                MessageBox.Show($"you selected - {selectId}");
+            }
         }
         // ************************************************
         // ***      P A R T S
@@ -52,163 +266,257 @@ namespace MiniStores
             // Get the parts
             Parts = SQLiteDataAccess.LoadParts();
 
-            // Display the parts in the ListBox
-            WireUpPartsLB();
+            // Sort
+            Parts.Sort((x, y) => x.PartName.CompareTo(y.PartName));
 
             // reset the add field on the display
-            PartName.Text = "";
-            PartQty.Text = "";
+            tbPartName.Text = "";
+            tbPartQty.Text = "";
 
             RefreshTypesCB();
-            TypeCB.SelectedIndex = 0;
+            cbType.SelectedIndex = 0;
 
             RefreshManufacturersCB();
-            ManufacturerCB.SelectedIndex = 0;
+            cbManufacturer.SelectedIndex = 0;
 
             RefreshLocationsCB();
-            LocationCB.SelectedIndex = 0;
+            cbLocation.SelectedIndex = 0;
 
+            // Must be refreshed after The Locations
             RefreshPositionsCB();
-            PositionCB.SelectedIndex = 0;
+            cbPosition.SelectedIndex = 0;
+
+            // Clear Informational Fields
+            tbPrice.Text = $"{0.00m:C2}";
+            tbComment.Text = "";
+
+            // Display the parts in the ListBox
+            // Must be Refreshed after EVERYTHING else
+            WireUpPartsLB();
 
             // reset the display field on the display
-            PartsL.Content = "Parts List (" + Parts.Count.ToString() + "): ";
+            lblParts.Content = LookUpTranslation("PartList") + " (" + Parts.Count.ToString() + "): ";
 
-            PartIdL.Content = "";
+            lblPartId.Content = "";
+
+            errorlog.InformationMessage("Parts Refreshed");
         }
-
+        // ****
         private void WireUpPartsLB()
         {
-            PartsListLB.Items.Clear();
+            lbPartsList.Items.Clear();
 
             foreach (var p in Parts)
             {
                 string text = $"{p.PartName} ({LookupType(p.TypeFK)}) ";
 
-                PartsListLB.Items.Add(text);
+                lbPartsList.Items.Add(text);
             }
         }
-
+        // ****
+        private void ClearTypeButton(object sender, RoutedEventArgs e)
+        {
+            tbTypeName.Text = "";
+            lblTypeId.Content = "";
+        }
+        // ****
         private void RefreshTypesCB()
         {
             Types = SQLiteDataAccess.LoadTypes();
 
+            // Load a Blank one for the ComboBox's
+            Types.Add(new TypeModel() { TypeId = 0, TypeName = " " });
+
+            // Sort
+            Types.Sort((x, y) => x.TypeName.CompareTo(y.TypeName));
+
             WireUpTypesCB();
         }
-
+        // ****
         private void WireUpTypesCB()
         {
-            TypeCB.Items.Clear();
+            cbType.Items.Clear();
 
             foreach (var t in Types)
             {
-                TypeCB.Items.Add(t.TypeName);
+                cbType.Items.Add(t.TypeName);
+                cbSearchType.Items.Add(t.TypeName);
             }
         }
-
+        // ****
         private void RefreshManufacturersCB()
         {
             Manufacturers = SQLiteDataAccess.LoadManufacturers();
 
+            // Load a Blank one for the ComboBox's
+            Manufacturers.Add(new ManufacturerModel() { ManufacturerId = 0, ManufacturerName = " " });
+
+            // Sort
+            Manufacturers.Sort((x, y) => x.ManufacturerName.CompareTo(y.ManufacturerName));
+
             WireUpManufacturersCB();
         }
-
+        // ****
         private void WireUpManufacturersCB()
         {
-            ManufacturerCB.Items.Clear();
+            cbManufacturer.Items.Clear();
 
             foreach (var m in Manufacturers)
             {
-                ManufacturerCB.Items.Add(m.ManufacturerName);
+                cbManufacturer.Items.Add(m.ManufacturerName);
+                cbSearchManu.Items.Add(m.ManufacturerName);
             }
         }
-
+        // ****
         private void RefreshLocationsCB()
         {
             Locations = SQLiteDataAccess.LoadLocations();
 
+            // Load a Blank one for the ComboBox's
+            Locations.Add(new LocationModel() { LocationId = 0, LocationName = " " });
+
+            // Sort
+            Locations.Sort((x, y) => x.LocationName.CompareTo(y.LocationName));
+
             WireUpLocationsCB();
         }
-
+        // ****
         private void WireUpLocationsCB()
         {
-            LocationCB.Items.Clear();
+            cbLocation.Items.Clear();
 
             foreach (var l in Locations)
             {
-                LocationCB.Items.Add(l.LocationName);
+                cbLocation.Items.Add(l.LocationName);
+                cbSearchLoc.Items.Add(l.LocationName);
             }
         }
-
+        // ****
         private void RefreshPositionsCB()
         {
-            int index = FindLocation((string)LocationCB.SelectedValue);
+            int index = FindLocation((string)cbLocation.SelectedValue);
 
             // Refresh ALL position list
             Positions.Clear();
             Positions = SQLiteDataAccess.LoadPositions();
 
+            // Load a Blank one for the ComboBox's
+            Positions.Add(new PositionModel() { PositionId = 0, PositionName = " " });
+
+            // Sort
+            Positions.Sort((x, y) => x.PositionName.CompareTo(y.PositionName));
+
             // Rebuild the Drop-down List
             UpdateLocationPositions();
         }
-
+        // ****
         private void WireUpPositionsCB()
         {
-            PositionCB.Items.Clear();
+            cbPosition.Items.Clear();
+
             string text = "";
 
             foreach (var p in PosSubSet)
             {
                 text = p.PositionName;
 
-                PositionCB.Items.Add(text);
+                cbPosition.Items.Add(text);
             }
         }
-
+        // ****
         private void RefreshPartsButton(object sender, RoutedEventArgs e)
         {
             RefreshPartsLB();
         }
+        // ****
+        private void ClearPartButton(object sender, RoutedEventArgs e)
+        {
+            lblPartId.Content = "";
+            tbPartName.Text = "";
+            tbPartQty.Text = "";
 
+            cbType.SelectedIndex = 0;
+            cbManufacturer.SelectedIndex = 0;
+            cbLocation.SelectedIndex = 0;
+            cbPosition.SelectedIndex = 0;
+            tbPrice.Text = $"{0.00m:C2}";
+            tbComment.Text = "";
+        }
+        // ****
         private void AddPartButton(object sender, RoutedEventArgs e)
         {
-            PartsModel p = new PartsModel();
+            bool error = false;
 
-            p.PartName = PartName.Text;
-            p.Quantity = int.Parse(PartQty.Text);
-            p.TypeFK = FindType((string)TypeCB.SelectedValue);
-            p.ManufacturerFK = FindManu((string)ManufacturerCB.SelectedValue);
-            p.LocationFK = FindLocation((string)LocationCB.SelectedValue);
-            p.PositionFK = FindPosition(p.LocationFK, (string)PositionCB.SelectedValue);
+            if (tbPartName.Text == "") error = true;
+            if (tbPartQty.Text == "") error = true;
+            if (cbType.Text == "") error = true;
+            if (cbManufacturer.Text == "") error = true;
+            if (cbLocation.Text == "") error = true;
+            if (cbPosition.Text == "") error = true;
+
+            if (error == true)
+            {
+                PartsModel p = new PartsModel();
+
+                p.PartName = tbPartName.Text;
+                p.Quantity = int.Parse(tbPartQty.Text);
+                p.TypeFK = FindType((string)cbType.SelectedValue);
+                p.ManufacturerFK = FindManu((string)cbManufacturer.SelectedValue);
+                p.LocationFK = FindLocation((string)cbLocation.SelectedValue);
+                p.PositionFK = FindPosition(p.LocationFK, (string)cbPosition.SelectedValue);
 
 
-            SQLiteDataAccess.SavePart(p);
+                SQLiteDataAccess.SavePart(p);
 
-            // Refresh ListBox
-            RefreshPartsLB();
+                // Refresh ListBox
+                RefreshPartsLB();
+
+                errorlog.InformationMessage("Part Added", p.ToString());
+            }
+            else
+            {
+                MessageBox.Show("One or more of the fields are blank!", "Parts Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
-
+        // ****
         private void UpdatePartButton(object sender, RoutedEventArgs e)
         {
             bool error = false;
 
-            if (PartName.Text == "") error = true;
-            if (PartQty.Text == "") error = true;
-            if (TypeCB.Text == "") error = true;
-            if (ManufacturerCB.Text == "") error = true;
-            if (LocationCB.Text == "") error = true;
-            if (PositionCB.Text == "") error = true;
+            if (tbPartName.Text == "") error = true;
+            if (tbPartQty.Text == "") error = true;
+            if (cbType.Text == "") error = true;
+            if (cbManufacturer.Text == "") error = true;
+            if (cbLocation.Text == "") error = true;
+            if (cbPosition.Text == "") error = true;
 
-            if (!error)
+            if (error == false)
             {
-                int index = PartsListLB.SelectedIndex;
+                int index = lbPartsList.SelectedIndex;
 
-                Parts[index].PartName = PartName.Text;
-                Parts[index].Quantity = int.Parse(PartQty.Text);
-                Parts[index].TypeFK = FindType((string)TypeCB.SelectedValue);
-                Parts[index].ManufacturerFK = FindManu((string)ManufacturerCB.SelectedValue);
-                Parts[index].LocationFK = FindLocation((string)LocationCB.SelectedValue);
-                Parts[index].PositionFK = FindPosition(Parts[index].LocationFK, (string)PositionCB.SelectedValue);
+                errorlog.InformationMessage("Part Updated", "From: " + Parts[index].ToString());
+
+                Parts[index].PartName = tbPartName.Text;
+                Parts[index].Quantity = int.Parse(tbPartQty.Text);
+                Parts[index].TypeFK = FindType((string)cbType.SelectedValue);
+                Parts[index].ManufacturerFK = FindManu((string)cbManufacturer.SelectedValue);
+                Parts[index].LocationFK = FindLocation((string)cbLocation.SelectedValue);
+                Parts[index].PositionFK = FindPosition(Parts[index].LocationFK, (string)cbPosition.SelectedValue);
+
+                if (tbPrice.Text != "")
+                {
+                    Decimal.TryParse(tbPrice.Text, out decimal num);
+                    Parts[index].Price = num;
+                }
+                else
+                {
+                    Parts[index].Price = 0.00m;
+                }
+
+                Parts[index].Comment = tbComment.Text;
+
+                errorlog.InformationMessage("", "To:" + Parts[index].ToString());
 
                 SQLiteDataAccess.UpdatePart(Parts[index]);
 
@@ -216,50 +524,62 @@ namespace MiniStores
                 RefreshPartsLB();
             }
         }
-
+        // ****
         private void PartSelectedListBox(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            int index = PartsListLB.SelectedIndex;
+            int index = lbPartsList.SelectedIndex;
 
             if (index != -1)
             {
-                PartsL.Content = "Parts List (" + Parts.Count.ToString() + "): " + index.ToString();
 
-                PartIdL.Content = Parts[index].PartsId;
+                lblParts.Content = LookUpTranslation("PartList") + " (" + Parts.Count.ToString() + "): ";
 
-                PartName.Text = Parts[index].PartName;
-                PartQty.Text = Parts[index].Quantity.ToString();
-                TypeCB.SelectedValue = LookupType(Parts[index].TypeFK);
-                ManufacturerCB.SelectedValue = LookupManu(Parts[index].ManufacturerFK);
-                LocationCB.SelectedValue = LookupLocation(Parts[index].LocationFK);
+                if (GlobalSetting.DebugApp == true)
+                {
+                    lblParts.Content += index.ToString();
+                }
+
+                lblPartId.Content = Parts[index].PartsId;
+
+                tbPartName.Text = Parts[index].PartName;
+                tbPartQty.Text = Parts[index].Quantity.ToString();
+                cbType.SelectedValue = LookupType(Parts[index].TypeFK);
+                cbManufacturer.SelectedValue = LookupManu(Parts[index].ManufacturerFK);
+                cbLocation.SelectedValue = LookupLocation(Parts[index].LocationFK);
 
                 UpdateLocationPositions();
-                PositionCB.SelectedValue = LookupPosition(Parts[index].LocationFK, Parts[index].PositionFK);
+                cbPosition.SelectedValue = LookupPosition(Parts[index].LocationFK, Parts[index].PositionFK);
 
-                AddPart.IsEnabled = false;
-                UpdatePart.IsEnabled = true;
-                DeletePart.IsEnabled = true;
+                tbPrice.Text = $"{Parts[index].Price:C2}";
+                tbComment.Text = Parts[index].Comment;
+
+                btnAddPart.IsEnabled = false;
+                btnUpdatePart.IsEnabled = true;
+                btnDeletePart.IsEnabled = true;
             }
             else
             {
-                AddPart.IsEnabled = true;
-                UpdatePart.IsEnabled = false;
-                DeletePart.IsEnabled = false;
+                btnAddPart.IsEnabled = true;
+                btnUpdatePart.IsEnabled = false;
+                btnDeletePart.IsEnabled = false;
             }
         }
-
+        // ****
         private void DeletePartButton(object sender, RoutedEventArgs e)
         {
-            int index = PartsListLB.SelectedIndex;
-            PartsL.Content = "Parts List : " + index.ToString();
+            int index = lbPartsList.SelectedIndex;
+            lblParts.Content = "Parts List : " + index.ToString();
+
+            errorlog.InformationMessage("Part Deleted", Parts[index].ToString());
 
             SQLiteDataAccess.DeletePart(Parts[index].PartsId);
 
             RefreshPartsLB();
         }
+        // ****
         private void ImportPartButton(object sender, RoutedEventArgs e)
         {
-            List<ColumnModel6> importParts = new List<ColumnModel6>();
+            List<ColumnModel8> importParts = new List<ColumnModel8>();
 
             string fileName = "";
             bool worked = CSVFile.GetImportFileName(out fileName);
@@ -268,10 +588,13 @@ namespace MiniStores
             {
                 importParts = CSVFile.ReadImportFile6(fileName, "PartName");
 
+                int count = 0;
+
                 foreach (var item in importParts)
                 {
                     if (FindPart(item.First) == -1)
                     {
+                        count++;
                         PartsModel p = new PartsModel();
 
                         p.PartName = item.First;
@@ -281,21 +604,35 @@ namespace MiniStores
                         p.LocationFK = FindLocation(item.Fifth);
                         p.PositionFK = FindPosition(p.LocationFK, item.Sixth);
 
+                        if (item.Seventh != "")
+                        {
+                            Decimal.TryParse(item.Seventh, out decimal num);
+                            p.Price = num;
+                        }
+                        else
+                        {
+                            p.Price = 0.00m;
+                        }
+
+                        p.Comment = item.Eighth;
+
                         SQLiteDataAccess.SavePart(p);
                     }
                 }
 
                 RefreshPartsLB();
 
-                MessageBox.Show("Import of Parts Completed Successfully", "Import of Parts", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Import of Parts Completed Successful", "Import of Parts", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Import of Parts Completed Successful", "Parts Imported: " + count);
             }
             else
             {
                 MessageBox.Show("Import of Parts Failed to open file", "Import of Parts", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Import of Parts Failed to open file");
             }
 
         }
-
+        // ****
         private void ExportPartButton(object sender, RoutedEventArgs e)
         {
             string fileName = "";
@@ -306,7 +643,7 @@ namespace MiniStores
             {
                 int i = 0;
 
-                contents[i] = "PartId,PartName,Type,Quantity,Manufacturer,Location,Position";
+                contents[i] = "PartId,PartName,Type,Quantity,Manufacturer,Location,Position,Price,Comment";
                 i++;
 
                 foreach (var item in Parts)
@@ -317,44 +654,59 @@ namespace MiniStores
                         + item.Quantity + ","
                         + LookupManu(item.ManufacturerFK) + ","
                         + LookupLocation(item.LocationFK) + ","
-                        + LookupPosition(item.LocationFK, item.PositionFK) + ",";
+                        + LookupPosition(item.LocationFK, item.PositionFK) + ","
+                        + item.Price + ","
+                        + item.Comment + ",";
 
                     i++;
                 }
 
                 System.IO.File.WriteAllLines(fileName, contents);
 
-                MessageBox.Show("Export of Parts Completed Successfully", "Export of Parts", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Export of Parts Completed Successful", "Export of Parts", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Export of Parts Completed Successful", "Parts Exported: " + Parts.Count);
             }
             else
             {
                 MessageBox.Show("Export of Parts Failed to open file", "Export of Parts", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Export of Parts Failed to open file");
             }
 
         }
-
+        // ****
         private void TypeCB_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            TypeL.Content = "Type: " + TypeCB.SelectedIndex.ToString();
+            if (GlobalSetting.DebugApp == true)
+            {
+                lblType.Content = LookUpTranslation("TypeM") + " " + cbType.SelectedIndex.ToString();
+            }
         }
-
+        // ****
         private void ManufacturerCB_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            ManufacturerL.Content = "Manufacturer: " + ManufacturerCB.SelectedIndex.ToString();
+            if (GlobalSetting.DebugApp == true)
+            {
+                lblManufacturer.Content = LookUpTranslation("ManufacturerM") + " " + cbManufacturer.SelectedIndex.ToString();
+            }
         }
-
+        // ****
         private void LocationCB_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            LocationL.Content = "Location: " + LocationCB.SelectedIndex.ToString();
+            if (GlobalSetting.DebugApp == true)
+            {
+                lblLocation.Content = LookUpTranslation("LocationM") + " " + cbLocation.SelectedIndex.ToString();
+            }
 
             UpdateLocationPositions();
         }
-
+        // ****
         private void PositionCB_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            PositionL.Content = "Position: " + PositionCB.SelectedIndex.ToString();
+            if (GlobalSetting.DebugApp == true)
+            {
+                lblPosition.Content = LookUpTranslation("PositionM") + " " + cbPosition.SelectedIndex.ToString();
+            }
         }
-
         // ***      T Y P E S
         private void RefreshTypesLB()
         {
@@ -367,52 +719,64 @@ namespace MiniStores
             WireUpTypesLB();
 
             // reset the add field on the display
-            TypeName.Text = "";
+            tbTypeName.Text = "";
 
             // reset the display field on the display
-            TypesL.Content = "Types List (" + Types.Count.ToString() + "): ";
+            lblTypes.Content = LookUpTranslation("TypeList") + " (" + Types.Count.ToString() + "): ";
 
-            TypeIdL.Content = "";
+            lblTypeId.Content = "";
+
+            errorlog.InformationMessage("Types Refreshed");
         }
-
+        // ****
         private void WireUpTypesLB()
         {
-            TypesListLB.Items.Clear();
+            lbTypesList.Items.Clear();
 
             foreach (var t in Types)
             {
-                TypesListLB.Items.Add(t.TypeName);
+                lbTypesList.Items.Add(t.TypeName);
             }
         }
-
+        // ****
         private void RefreshTypesButton(object sender, RoutedEventArgs e)
         {
             RefreshTypesLB();
         }
-
+        // ****
         private void AddTypeButton(object sender, RoutedEventArgs e)
         {
-            TypeModel t = new TypeModel();
+            if (tbTypeName.Text != "")
+            {
+                TypeModel t = new TypeModel();
 
-            t.TypeName = TypeName.Text;
+                t.TypeName = tbTypeName.Text;
 
-            SQLiteDataAccess.SaveType(t);
+                SQLiteDataAccess.SaveType(t);
 
-            // Refresh ListBox
-            RefreshTypesLB();
+                // Refresh ListBox
+                RefreshTypesLB();
+
+                errorlog.InformationMessage("Type Added", t.ToString());
+            }
+            else
+            {
+                MessageBox.Show("Type Name field is blank!", "Types Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
-
+        // ****
         private void UpdateTypeButton(object sender, RoutedEventArgs e)
         {
-            bool error = false;
-
-            if (TypeName.Text == "") error = true;
-
-            if (!error)
+            if (tbTypeName.Text != "")
             {
-                int index = TypesListLB.SelectedIndex;
+                int index = lbTypesList.SelectedIndex;
 
-                Types[index].TypeName = TypeName.Text;
+                errorlog.InformationMessage("Types Updated", "From: " + Types[index].ToString());
+
+                Types[index].TypeName = tbTypeName.Text;
+
+                errorlog.InformationMessage("", "To: " + Types[index].ToString());
 
                 SQLiteDataAccess.UpdateType(Types[index]);
 
@@ -420,41 +784,48 @@ namespace MiniStores
                 RefreshTypesLB();
             }
         }
-
+        // ****
         private void TypeSelectedListBox(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            int index = TypesListLB.SelectedIndex;
+            int index = lbTypesList.SelectedIndex;
 
             if (index != -1)
             {
-                TypesL.Content = "Types List (" + Types.Count.ToString() + "): " + index.ToString();
+                lblTypes.Content = LookUpTranslation("TypeList") + " (" + Types.Count.ToString() + "): ";
 
-                TypeIdL.Content = Types[index].TypeId;
+                if (GlobalSetting.DebugApp == true)
+                {
+                    lblTypes.Content += index.ToString();
+                }
 
-                TypeName.Text = Types[index].TypeName;
+                lblTypeId.Content = Types[index].TypeId;
 
-                AddType.IsEnabled = false;
-                UpdateType.IsEnabled = true;
-                DeleteType.IsEnabled = true;
+                tbTypeName.Text = Types[index].TypeName;
+
+                btnAddType.IsEnabled = false;
+                btnUpdateType.IsEnabled = true;
+                btnDeleteType.IsEnabled = true;
             }
             else
             {
-                AddType.IsEnabled = true;
-                UpdateType.IsEnabled = false;
-                DeleteType.IsEnabled = false;
+                btnAddType.IsEnabled = true;
+                btnUpdateType.IsEnabled = false;
+                btnDeleteType.IsEnabled = false;
             }
         }
-
+        // ****
         private void DeleteTypeButton(object sender, RoutedEventArgs e)
         {
-            int index = TypesListLB.SelectedIndex;
-            TypesL.Content = "Types List : " + index.ToString();
+            int index = lbTypesList.SelectedIndex;
+            lblTypes.Content = LookUpTranslation("TypeList") + " " + index.ToString();
+
+            errorlog.InformationMessage("Types Deleted", Types[index].ToString());
 
             SQLiteDataAccess.DeleteType(Types[index].TypeId);
 
             RefreshTypesLB();
         }
-
+        // ****
         private void ImportTypeButton(object sender, RoutedEventArgs e)
         {
             List<string> importTypes = new List<string>();
@@ -466,10 +837,13 @@ namespace MiniStores
             {
                 importTypes = CSVFile.ReadImportFile1(fileName, "TypeName");
 
+                int count = 0;
+
                 foreach (var item in importTypes)
                 {
                     if (FindType(item) == -1)
                     {
+                        count++;
                         TypeModel t = new TypeModel();
 
                         t.TypeName = item;
@@ -480,16 +854,21 @@ namespace MiniStores
 
                 RefreshTypesLB();
 
-                MessageBox.Show("Import of Types Completed Successfully", "Import of Types", MessageBoxButton.OK, MessageBoxImage.Information);
+                RefreshTypesCB();
+
+                MessageBox.Show("Import of Types Completed Successful", "Import of Types", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Import of Types Completed Successful", "Types Imported: " + count);
+
             }
             else
             {
                 MessageBox.Show("Import of Types Failed to open file", "Import of Types", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Import of Types Failed to open file");
             }
 
 
         }
-
+        // ****
         private void ExportTypeButton(object sender, RoutedEventArgs e)
         {
             string fileName = "";
@@ -511,14 +890,15 @@ namespace MiniStores
 
                 System.IO.File.WriteAllLines(fileName, contents);
 
-                MessageBox.Show("Export of Types Completed Successfully", "Export of Types", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Export of Types Completed Successful", "Export of Types", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Export of Types Completed Successful", "Types Exported: " + Types.Count);
             }
             else
             {
                 MessageBox.Show("Export of Types Failed to open file", "Export of Types", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Export of Types Failed to open file");
             }
         }
-
         // ***      M A N U F A C T U R E R S
         private void RefreshManusLB()
         {
@@ -531,52 +911,68 @@ namespace MiniStores
             WireUpManuLB();
 
             // reset the add field on the display
-            ManuName.Text = "";
+            tbManuName.Text = "";
 
             // reset the display field on the display
-            ManusL.Content = "Manufacturers List (" + Manufacturers.Count.ToString() + "): ";
+            lblManus.Content = LookUpTranslation("ManufacturerList") + " (" + Manufacturers.Count.ToString() + "): ";
 
-            ManuIdL.Content = "";
+            lblManuId.Content = "";
+
+            errorlog.InformationMessage("Manufacturers Refreshed");
+
         }
-
+        // ****
         private void WireUpManuLB()
         {
-            ManusListLB.Items.Clear();
+            lbManusList.Items.Clear();
 
             foreach (var m in Manufacturers)
             {
-                ManusListLB.Items.Add(m.ManufacturerName);
+                lbManusList.Items.Add(m.ManufacturerName);
             }
         }
-
+        // ****
+        private void ClearManuButton(object sender, RoutedEventArgs e)
+        {
+            lblManuId.Content = "";
+            tbManuName.Text = "";
+        }
+        // ****
         private void RefreshManusButton(object sender, RoutedEventArgs e)
         {
             RefreshManusLB();
         }
-
+        // ****
         private void AddManuButton(object sender, RoutedEventArgs e)
         {
-            ManufacturerModel m = new ManufacturerModel();
+            if (tbManuName.Text == "")
+            {
+                ManufacturerModel m = new ManufacturerModel();
 
-            m.ManufacturerName = ManuName.Text;
+                m.ManufacturerName = tbManuName.Text;
 
-            SQLiteDataAccess.SaveManufacturer(m);
+                SQLiteDataAccess.SaveManufacturer(m);
 
-            // Refresh ListBox
-            RefreshManusLB();
+                // Refresh ListBox
+                RefreshManusLB();
+
+                errorlog.InformationMessage("Manufacturers Added", m.ToString());
+            }
+            else
+            {
+                MessageBox.Show("Manufacturer Name field is blank!", "Manufacturers Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
+        // ****
         private void UpdateManuButton(object sender, RoutedEventArgs e)
         {
-            bool error = false;
-
-            if (ManuName.Text == "") error = true;
-
-            if (!error)
+            if (tbManuName.Text != "")
             {
-                int index = ManusListLB.SelectedIndex;
+                int index = lbManusList.SelectedIndex;
 
-                Manufacturers[index].ManufacturerName = ManuName.Text;
+                errorlog.InformationMessage("Manufacturers Updated", "From: " + Manufacturers[index].ToString());
+                Manufacturers[index].ManufacturerName = tbManuName.Text;
+                errorlog.InformationMessage("", "To: " + Manufacturers[index].ToString());
 
                 SQLiteDataAccess.UpdateManufacturer(Manufacturers[index]);
 
@@ -584,41 +980,48 @@ namespace MiniStores
                 RefreshManusLB();
             }
         }
-
+        // ****
         private void ManuSelectedListBox(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            int index = ManusListLB.SelectedIndex;
+            int index = lbManusList.SelectedIndex;
 
             if (index != -1)
             {
-                ManusL.Content = ManusL.Content = "Manufacturers List (" + Manufacturers.Count.ToString() + "): " + index.ToString();
+                lblManus.Content = lblManus.Content = LookUpTranslation("ManufacturerList") + " (" + Manufacturers.Count.ToString() + "): ";
 
-                ManuIdL.Content = Manufacturers[index].ManufacturerId;
+                if (GlobalSetting.DebugApp == true)
+                {
+                    lblManus.Content += index.ToString();
+                }
 
-                ManuName.Text = Manufacturers[index].ManufacturerName;
+                lblManuId.Content = Manufacturers[index].ManufacturerId;
 
-                AddManu.IsEnabled = false;
-                UpdateManu.IsEnabled = true;
-                DeleteManu.IsEnabled = true;
+                tbManuName.Text = Manufacturers[index].ManufacturerName;
+
+                btnAddManu.IsEnabled = false;
+                btnUpdateManu.IsEnabled = true;
+                btnDeleteManu.IsEnabled = true;
             }
             else
             {
-                AddManu.IsEnabled = true;
-                UpdateManu.IsEnabled = false;
-                DeleteManu.IsEnabled = false;
+                btnAddManu.IsEnabled = true;
+                btnUpdateManu.IsEnabled = false;
+                btnDeleteManu.IsEnabled = false;
             }
         }
-
+        // ****
         private void DeleteManuButton(object sender, RoutedEventArgs e)
         {
-            int index = ManusListLB.SelectedIndex;
-            ManusL.Content = "Manufacturers List : " + index.ToString();
+            int index = lbManusList.SelectedIndex;
+            lblManus.Content = LookUpTranslation("ManufacturerList") + " " + index.ToString();
+
+            errorlog.InformationMessage("Manufacturers Deleted", Manufacturers[index].ToString());
 
             SQLiteDataAccess.DeleteManufacturer(Manufacturers[index].ManufacturerId);
 
             RefreshManusLB();
         }
-
+        // ****
         private void ImportManuButton(object sender, RoutedEventArgs e)
         {
             List<string> importManufacturers = new List<string>();
@@ -630,11 +1033,12 @@ namespace MiniStores
             {
                 importManufacturers = CSVFile.ReadImportFile1(fileName, "ManufacturerName");
 
-
+                int count = 0;
                 foreach (var item in importManufacturers)
                 {
                     if (FindManu(item) == -1)
                     {
+                        count++;
                         ManufacturerModel m = new ManufacturerModel();
 
                         m.ManufacturerName = item;
@@ -645,14 +1049,19 @@ namespace MiniStores
 
                 RefreshManusLB();
 
-                MessageBox.Show("Import of Manufacturers Completed Successfully", "Import of Manufacturers", MessageBoxButton.OK, MessageBoxImage.Information);
+                WireUpManufacturersCB();
+
+                MessageBox.Show("Import of Manufacturers Completed Successful", "Import of Manufacturers", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Import of Manufacturers Completed Successful", "Manufacturers Imported: " + count);
+
             }
             else
             {
                 MessageBox.Show("Import of Manufacturers Failed to open file", "Import of Manufacturers", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Import of Manufacturers Failed to open file");
             }
         }
-
+        // ****
         private void ExportManuButton(object sender, RoutedEventArgs e)
         {
             string fileName = "";
@@ -674,13 +1083,14 @@ namespace MiniStores
 
                 System.IO.File.WriteAllLines(fileName, contents);
 
-                MessageBox.Show("Export of Manufacturers Completed Successfully", "Export of Manufacturers", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Export of Manufacturers Completed Successful", "Export of Manufacturers", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Export of Manufacturers Completed Successful", "Manufacturers Exported: " + Manufacturers.Count);
             }
             else
             {
                 MessageBox.Show("Export of Manufacturers Failed to open file", "Export of Manufacturers", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Export of Manufacturers Failed to open file");
             }
-
         }
         // ***      L O C A T I O N S
         private void RefreshLocsLB()
@@ -694,52 +1104,68 @@ namespace MiniStores
             WireUpLocLB();
 
             // reset the add field on the display
-            LocName.Text = "";
+            tbLocName.Text = "";
 
             // reset the display field on the display
-            LocsL.Content = "Locations List(" + Locations.Count.ToString() + "): ";
+            lblLocs.Content = LookUpTranslation("LocationList") + "(" + Locations.Count.ToString() + "): ";
 
-            LocIdL.Content = "";
+            lblLocId.Content = "";
+
+            errorlog.InformationMessage("Locations Refreshed");
         }
-
+        // ****
         private void WireUpLocLB()
         {
-            LocsListLB.Items.Clear();
+            lbLocsList.Items.Clear();
 
             foreach (var l in Locations)
             {
-                LocsListLB.Items.Add(l.LocationName);
+                lbLocsList.Items.Add(l.LocationName);
             }
         }
-
+        // ****
+        private void ClearLocButton(object sender, RoutedEventArgs e)
+        {
+            lblLocId.Content = "";
+            tbLocName.Text = "";
+        }
+        // ****
         private void RefreshLocsButton(object sender, RoutedEventArgs e)
         {
             RefreshLocsLB();
         }
-
+        // ****
         private void AddLocButton(object sender, RoutedEventArgs e)
         {
-            LocationModel l = new LocationModel();
 
-            l.LocationName = LocName.Text;
+            if (tbLocName.Text == "")
+            {
+                LocationModel l = new LocationModel();
 
-            SQLiteDataAccess.SaveLocation(l);
+                l.LocationName = tbLocName.Text;
 
-            // Refresh ListBox
-            RefreshLocsLB();
+                SQLiteDataAccess.SaveLocation(l);
+
+                // Refresh ListBox
+                RefreshLocsLB();
+
+                errorlog.InformationMessage("Locations Added", l.ToString());
+            }
+            else
+            {
+                MessageBox.Show("Location Name field is blank!", "Locations Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
+        // ****
         private void UpdateLocButton(object sender, RoutedEventArgs e)
         {
-            bool error = false;
-
-            if (LocName.Text == "") error = true;
-
-            if (!error)
+            if (tbLocName.Text != "")
             {
-                int index = LocsListLB.SelectedIndex;
+                int index = lbLocsList.SelectedIndex;
 
-                Locations[index].LocationName = LocName.Text;
+                errorlog.InformationMessage("Locations Updated", "From: " + Locations[index].ToString());
+                Locations[index].LocationName = tbLocName.Text;
+                errorlog.InformationMessage("", "To: " + Locations[index].ToString());
 
                 SQLiteDataAccess.UpdateLocation(Locations[index]);
 
@@ -747,41 +1173,48 @@ namespace MiniStores
                 RefreshLocsLB();
             }
         }
-
+        // ****
         private void LocSelectedListBox(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            int index = LocsListLB.SelectedIndex;
+            int index = lbLocsList.SelectedIndex;
 
             if (index != -1)
             {
-                LocsL.Content = "Locations List(" + Locations.Count.ToString() + "): " + index.ToString();
+                lblLocs.Content = LookUpTranslation("LocationList") + " (" + Locations.Count.ToString() + "): ";
 
-                LocIdL.Content = Locations[index].LocationId;
+                if (GlobalSetting.DebugApp == true)
+                {
+                    lblLocs.Content += index.ToString();
+                }
 
-                LocName.Text = Locations[index].LocationName;
+                lblLocId.Content = Locations[index].LocationId;
 
-                AddLoc.IsEnabled = false;
-                UpdateLoc.IsEnabled = true;
-                DeleteLoc.IsEnabled = true;
+                tbLocName.Text = Locations[index].LocationName;
+
+                btnAddLoc.IsEnabled = false;
+                btnUpdateLoc.IsEnabled = true;
+                btnDeleteLoc.IsEnabled = true;
             }
             else
             {
-                AddLoc.IsEnabled = true;
-                UpdateLoc.IsEnabled = false;
-                DeleteLoc.IsEnabled = false;
+                btnAddLoc.IsEnabled = true;
+                btnUpdateLoc.IsEnabled = false;
+                btnDeleteLoc.IsEnabled = false;
             }
         }
-
+        // ****
         private void DeleteLocButton(object sender, RoutedEventArgs e)
         {
-            int index = LocsListLB.SelectedIndex;
-            LocsL.Content = "Location List : " + index.ToString();
+            int index = lbLocsList.SelectedIndex;
+            lblLocs.Content = LookUpTranslation("LocationList") + " " + index.ToString();
+
+            errorlog.InformationMessage("Locations Deleted", Locations[index].ToString());
 
             SQLiteDataAccess.DeleteLocation(Locations[index].LocationId);
 
             RefreshLocsLB();
         }
-
+        // ****
         private void ImportLocButton(object sender, RoutedEventArgs e)
         {
             List<string> importLocations = new List<string>();
@@ -793,10 +1226,12 @@ namespace MiniStores
             {
                 importLocations = CSVFile.ReadImportFile1(fileName, "LocationName");
 
+                int count = 0;
                 foreach (var item in importLocations)
                 {
                     if (FindLocation(item) == -1)
                     {
+                        count++;
                         LocationModel l = new LocationModel();
 
                         l.LocationName = item;
@@ -807,14 +1242,18 @@ namespace MiniStores
 
                 RefreshLocsLB();
 
-                MessageBox.Show("Import of Locations Completed Successfully", "Import of Locations", MessageBoxButton.OK, MessageBoxImage.Information);
+                RefreshLocationsCB();
+
+                MessageBox.Show("Import of Locations Completed Successful", "Import of Locations", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Import of Locations Completed Successful", "Locations Imported" + count);
             }
             else
             {
                 MessageBox.Show("Import of Locations Failed to open file", "Import of Locations", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Import of Locations Failed to open file");
             }
         }
-
+        // ****
         private void ExportLocButton(object sender, RoutedEventArgs e)
         {
             string fileName = "";
@@ -836,11 +1275,13 @@ namespace MiniStores
 
                 System.IO.File.WriteAllLines(fileName, contents);
 
-                MessageBox.Show("Export of Locations Completed Successfully", "Export of Locations", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Export of Locations Completed Successful", "Export of Locations", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Export of Locations Completed Successful", "Locations Exported: " + Locations.Count);
             }
             else
             {
                 MessageBox.Show("Export of Locations Failed to open file", "Export of Locations", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Export of Locations Failed to open file");
             }
 
         }
@@ -849,7 +1290,7 @@ namespace MiniStores
         {
             // Get the Locations
             Positions = SQLiteDataAccess.LoadPositions();
-            PosSubSet = SQLiteDataAccess.GetPositions(LocCB.SelectedIndex);
+            PosSubSet = SQLiteDataAccess.GetPositions(cbLoc.SelectedIndex);
 
             // Only need to sort the "Displayed" version
             if (PosSubSet.Count > 0)
@@ -858,73 +1299,101 @@ namespace MiniStores
             }
 
             // Display the Locations in the ComboBox
-            LocCB.Items.Clear();
+            cbLoc.Items.Clear();
             WireUpLocCB();
+            cbLoc.SelectedIndex = 0;
             // Display the parts in the ListBox
             WireUpPosLB();
 
             // reset the add field on the display
-            PosName.Text = "";
+            tbPosName.Text = "";
 
             // reset the display field on the display
-            PossL.Content = "Positions List(" + PosSubSet.Count.ToString() + "): ";
+            lblPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + "): ";
 
-            PosIdL.Content = "";
+            lblPosId.Content = "";
+
+            errorlog.InformationMessage("Positions Refreshed");
+
         }
-
+        // ****
         private void WireUpPosLB()
         {
-            PossListLB.Items.Clear();
+            lbPossList.Items.Clear();
 
             foreach (var p in PosSubSet)
             {
-                PossListLB.Items.Add(p.PositionName);
+                lbPossList.Items.Add(p.PositionName);
             }
         }
-
+        // ****
         private void WireUpLocCB()
         {
-            LocCB.Items.Clear();
+            cbLoc.Items.Clear();
 
             foreach (var l in Locations)
             {
-                LocCB.Items.Add(l.LocationName);
+                cbLoc.Items.Add(l.LocationName);
             }
         }
-
+        // ****
+        private void ClearPosButton(object sender, RoutedEventArgs e)
+        {
+            lblPosId.Content = "";
+            cbLoc.Text = "";
+            tbPosName.Text = "";
+        }
+        // ****
         private void RefreshPossButton(object sender, RoutedEventArgs e)
         {
             RefreshPossLB();
         }
-
+        // ****
         private void AddPosButton(object sender, RoutedEventArgs e)
         {
-            PositionModel p = new PositionModel();
+            bool error = false;
 
-            p.LocationFK = FindLocation((string)LocCB.SelectedValue);
+            if (tbPosName.Text == "") error = true;
+            if (cbLoc.Text == "") error = true;
 
-            p.PositionName = PosName.Text;
+            if (error == true)
+            {
+                PositionModel p = new PositionModel();
 
-            SQLiteDataAccess.SavePosition(p);
+                p.LocationFK = FindLocation((string)cbLoc.SelectedValue);
 
-            // Refresh ListBox
-            RefreshPossLB();
+                p.PositionName = tbPosName.Text;
+
+                SQLiteDataAccess.SavePosition(p);
+
+                // Refresh ListBox
+                RefreshPossLB();
+
+                errorlog.InformationMessage("Positions Added", p.ToString());
+            }
+            else
+            {
+                MessageBox.Show("One or more fields are blank!", "Positions Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
-
+        // ****
         private void UpdatePosButton(object sender, RoutedEventArgs e)
         {
             bool error = false;
 
-            if (PosName.Text == "") error = true;
-            if (LocCB.Text == "") error = true;
+            if (tbPosName.Text == "") error = true;
+            if (cbLoc.Text == "") error = true;
 
-            if (!error)
+            if (error == true)
             {
-                int index = PossListLB.SelectedIndex;
+                int index = lbPossList.SelectedIndex;
 
                 int selectedID = PosSubSet[index].PositionId;
 
-                PosSubSet[index].PositionName = PosName.Text;
+                errorlog.InformationMessage("Positions Updated", "From: " + PosSubSet[index].ToString());
+                PosSubSet[index].PositionName = tbPosName.Text;
+                errorlog.InformationMessage("", "To: " + PosSubSet[index].ToString());
 
                 SQLiteDataAccess.UpdatePosition(PosSubSet[index]);
 
@@ -932,41 +1401,49 @@ namespace MiniStores
                 RefreshPossLB();
             }
         }
-
+        // ****
         private void PosSelectedListBox(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            int index = PossListLB.SelectedIndex;
+            int index = lbPossList.SelectedIndex;
 
             if (index != -1)
             {
-                PossL.Content = "Positions List(" + PosSubSet.Count.ToString() + "): " + index.ToString();
+                lblPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + "): ";
 
-                PosIdL.Content = PosSubSet[index].PositionId;
+                if (GlobalSetting.DebugApp == true)
+                {
+                    lblPoss.Content += index.ToString();
+                }
 
-                PosName.Text = PosSubSet[index].PositionName;
+                lblPosId.Content = PosSubSet[index].PositionId;
 
-                AddPos.IsEnabled = false;
-                UpdatePos.IsEnabled = true;
-                DeletePos.IsEnabled = true;
+                tbPosName.Text = PosSubSet[index].PositionName;
+
+                btnAddPos.IsEnabled = false;
+                btnUpdatePos.IsEnabled = true;
+                btnDeletePos.IsEnabled = true;
             }
             else
             {
-                AddPos.IsEnabled = true;
-                UpdatePos.IsEnabled = false;
-                DeletePos.IsEnabled = false;
+                btnAddPos.IsEnabled = true;
+                btnUpdatePos.IsEnabled = false;
+                btnDeletePos.IsEnabled = false;
             }
         }
-
+        // ****
         private void DeletePosButton(object sender, RoutedEventArgs e)
         {
-            int index = PossListLB.SelectedIndex;
-            PossL.Content = "Position List : " + index.ToString();
+            int index = lbPossList.SelectedIndex;
+            lblPoss.Content = LookUpTranslation("PositionList") + " " + index.ToString();
+
+            errorlog.InformationMessage("Positions Deleted", PosSubSet[index].ToString());
 
             SQLiteDataAccess.DeletePosition(PosSubSet[index].PositionId);
 
             RefreshPossLB();
-        }
 
+        }
+        // ****
         private void ImportPosButton(object sender, RoutedEventArgs e)
         {
             List<ColumnModel2> importPositions = new List<ColumnModel2>();
@@ -978,10 +1455,12 @@ namespace MiniStores
             {
                 importPositions = CSVFile.ReadImportFile2(fileName, "PositionName");
 
+                int count = 0;
                 foreach (var item in importPositions)
                 {
                     if (FindLocation(item.First) > -1 && FindPosition(FindLocation(item.First), item.Second) == -1)
                     {
+                        count++;
                         PositionModel p = new PositionModel();
 
                         p.LocationFK = FindLocation(item.First);
@@ -993,14 +1472,18 @@ namespace MiniStores
 
                 RefreshPossLB();
 
-                MessageBox.Show("Import of Positions Completed Successfully", "Import of Positions", MessageBoxButton.OK, MessageBoxImage.Information);
+                RefreshPositionsCB();
+
+                MessageBox.Show("Import of Positions Completed Successful", "Import of Positions", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Import of Positions Completed Successful", "Position Imported: " + count);
             }
             else
             {
                 MessageBox.Show("Import of Positions Failed to open file", "Import of Positions", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Import of Positions Failed to open file");
             }
         }
-
+        // ****
         private void ExportPosButton(object sender, RoutedEventArgs e)
         {
             string fileName = "";
@@ -1024,25 +1507,31 @@ namespace MiniStores
 
                 System.IO.File.WriteAllLines(fileName, contents);
 
-                MessageBox.Show("Export of Positions Completed Successfully", "Export of Positions", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Export of Positions Completed Successful", "Export of Positions", MessageBoxButton.OK, MessageBoxImage.Information);
+                errorlog.InformationMessage("Export of Positions Completed Successful", "Positions Exported: " + Positions.Count);
             }
             else
             {
                 MessageBox.Show("Export of Positions Failed to open file", "Export of Positions", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorlog.WarningMessage("Export of Positions Failed to open file");
             }
 
         }
-
+        // ****
         private void LocCB_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            LocL.Content = "Location: " + LocCB.SelectedIndex.ToString();
+            if (GlobalSetting.DebugApp == true)
+            {
+                lblLoc.Content = "Location: " + cbLoc.SelectedIndex.ToString();
+            }
+
             UpdateLocPoss();
         }
         // ************************************************
         // ************************************************
         private void UpdateLocationPositions()
         {
-            int index = FindLocation((string)LocationCB.SelectedValue);
+            int index = FindLocation((string)cbLocation.SelectedValue);
 
             PosSubSet.Clear();
 
@@ -1056,7 +1545,7 @@ namespace MiniStores
         // ****
         private void UpdateLocPoss()
         {
-            int index = FindLocation((string)LocCB.SelectedValue);
+            int index = FindLocation((string)cbLoc.SelectedValue);
 
             PosSubSet.Clear();
 
@@ -1066,25 +1555,34 @@ namespace MiniStores
 
                 PosSubSet.Sort((x, y) => x.PositionName.CompareTo(y.PositionName));
 
-                PossL.Content = "Positions List(" + PosSubSet.Count.ToString() + "): ";
+                lblPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + "): ";
             }
 
             WireUpPosLB();
         }
+        // **** ****
+        private void SettingButton(object sender, RoutedEventArgs e)
+        {
+            new FileSettings(errorlog, gs).Show();
+        }
         // ****
-
         private void ExitButton(object sender, RoutedEventArgs e)
         {
+            errorlog.InformationMessage("Application Ending ...", "Someone pressed the Exit options.");
+
             Application.Current.Shutdown();
         }
-
+        // ****
         private void HelpButton(object sender, RoutedEventArgs e)
         {
             new AboutHelp().Show();
         }
-
+        // ****
+        private void AboutButton(object sender, RoutedEventArgs e)
+        {
+            new AboutAbout().Show();
+        }
         // ****     G E N E R A L
-
         private int FindPart(string p)
         {
             foreach (var part in Parts)
@@ -1222,6 +1720,20 @@ namespace MiniStores
             }
 
             return "";
+        }
+        // ****
+        public string LookUpTranslation(string lookUpKey)
+        {
+            bool worked = ScreenText.TryGetValue(lookUpKey, out PharseText output);
+
+            if (worked)
+            {
+                return output.LangText.ToString();
+            }
+            else
+            {
+                return "Unknown";
+            }
         }
         // ****
     }

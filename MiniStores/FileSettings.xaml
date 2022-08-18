@@ -1,0 +1,38 @@
+﻿<Window x:Class="MiniStores.FileSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MiniStores"
+        mc:Ignorable="d"
+        Title="Mini-Stores" Height="210" Width="400" WindowStartupLocation="CenterScreen">
+    <StackPanel>
+        <Label Content="Settings" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Language:" FontWeight="Bold"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" x:Name="cbSetLang" SelectionChanged="cbSettingChanged"/>
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Days to Retain Joblog's:" FontWeight="Bold"/>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbSetRetain" SelectionChanged="tbSettingChanged" PreviewTextInput="tbRetainValidation"/>
+
+            <Label Grid.Row="2" Grid.Column="0" Content="Debug:" FontWeight="Bold" />
+            <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cbSetDebug" SelectionChanged="cbSettingChanged"/>
+
+            <Button Grid.Row="4" Grid.Column="0" x:Name="btnSettingSave" Content="Save" Width="100" Click="btnSettingSave_Clicked"/>
+            <Button Grid.Row="4" Grid.Column="1" x:Name="btnSettingCancle" Content="Cancel" Width="100" Click="btnSettingCancle_Clicked"/>
+        </Grid>
+    </StackPanel>
+</Window>
