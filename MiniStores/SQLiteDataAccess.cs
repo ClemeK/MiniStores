@@ -10,13 +10,22 @@ namespace MiniStores
 {
     internal class SQLiteDataAccess
     {
-        // ************************************************
+        // ***
+        /// <summary>
+        /// Retrives the connection string from the Config Manager
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>string = connection name</returns>
         private static string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
         // ************************************************
         // ************************************************
+        /// <summary>
+        /// Loads all Parts
+        /// </summary>
+        /// <returns>Returns a List of the Parts</returns>
         public static List<PartsModel> LoadParts()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -26,6 +35,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Updates a Part in the DB
+        /// </summary>
+        /// <param name="part">Part to update</param>
         public static void UpdatePart(PartsModel part)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -45,6 +58,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Saves a Part to the DB
+        /// </summary>
+        /// <param name="part">Part to save</param>
         public static void SavePart(PartsModel part)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -54,6 +71,11 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Fetch's a Part from the DB
+        /// </summary>
+        /// <param name="id">Part ID to Fetch</param>
+        /// <returns>Part as a List</returns>
         public static List<PartsModel> GetPart(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -64,6 +86,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Deletes a Part from the DB
+        /// </summary>
+        /// <param name="id">Part ID to delete</param>
         public static void DeletePart(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -72,6 +98,11 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Search's the DB
+        /// </summary>
+        /// <param name="SearchQurey">Query for the search</param>
+        /// <returns>List of the Parts found from the Query</returns>
         public static List<PartsModel> SearchParts(string SearchQurey)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -81,9 +112,12 @@ namespace MiniStores
                 return output.ToList();
             }
         }
-
         // ************************************************
         // ************************************************
+        /// <summary>
+        /// Load All Type's from the DB
+        /// </summary>
+        /// <returns>List of the Type's</returns>
         public static List<TypeModel> LoadTypes()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -93,6 +127,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Update a Type in the DB
+        /// </summary>
+        /// <param name="type">Type to update</param>
         public static void UpdateType(TypeModel type)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -105,6 +143,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Save a Type to the DB
+        /// </summary>
+        /// <param name="type">Type to Save</param>
         public static void SaveType(TypeModel type)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -113,6 +155,11 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Fetch a Type from the DB
+        /// </summary>
+        /// <param name="id">Type ID to fetch</param>
+        /// <returns>List of the Type</returns>
         public static List<TypeModel> GetType(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -123,6 +170,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Delete a Type from the DB
+        /// </summary>
+        /// <param name="id">Type ID to delete</param>
         public static void DeleteType(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -132,6 +183,10 @@ namespace MiniStores
         }
         // ************************************************
         // ************************************************
+        /// <summary>
+        /// Load All the Manufacturer's from the DB
+        /// </summary>
+        /// <returns>List of Manufacturer</returns>
         public static List<ManufacturerModel> LoadManufacturers()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -141,6 +196,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Update a Manufacturer in the DB
+        /// </summary>
+        /// <param name="manu">Manufacturer to Update</param>
         public static void UpdateManufacturer(ManufacturerModel manu)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -153,6 +212,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Save a Manufacturer to the DB
+        /// </summary>
+        /// <param name="manu">Manufacturer to save</param>
         public static void SaveManufacturer(ManufacturerModel manu)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -161,6 +224,11 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Fetch a Manufacturer from the DB
+        /// </summary>
+        /// <param name="id">Manufacturer ID to fetch</param>
+        /// <returns>List of Manufacturer</returns>
         public static List<ManufacturerModel> GetManufacturer(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -171,6 +239,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Delete a Manufacturer from the db
+        /// </summary>
+        /// <param name="id">Manufacturer ID to delete</param>
         public static void DeleteManufacturer(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -180,6 +252,10 @@ namespace MiniStores
         }
         // ************************************************
         // ************************************************
+        /// <summary>
+        /// Load All Location's from the DB
+        /// </summary>
+        /// <returns>List of Location's</returns>
         public static List<LocationModel> LoadLocations()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -189,6 +265,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Update a Location in the DB
+        /// </summary>
+        /// <param name="loc">Location to update</param>
         public static void UpdateLocation(LocationModel loc)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -201,6 +281,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Save a Location to DB
+        /// </summary>
+        /// <param name="loc">Location to save</param>
         public static void SaveLocation(LocationModel loc)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -209,6 +293,11 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Fetch a Location from the DB
+        /// </summary>
+        /// <param name="id">Location Id to fetch</param>
+        /// <returns>List of Location's</returns>
         public static List<LocationModel> GetLocation(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -219,6 +308,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Delete a Location from the DB
+        /// </summary>
+        /// <param name="id">Location ID to delete</param>
         public static void DeleteLocation(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -228,6 +321,10 @@ namespace MiniStores
         }
         // ************************************************
         // ************************************************
+        /// <summary>
+        /// Load All Position's in the DB
+        /// </summary>
+        /// <returns>List of Position's</returns>
         public static List<PositionModel> LoadPositions()
         {
             // Not currently used, but here for completeness
@@ -239,6 +336,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Update a Position in the DB
+        /// </summary>
+        /// <param name="pos">Position to update</param>
         public static void UpdatePosition(PositionModel pos)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -251,6 +352,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Save a Position to the DB
+        /// </summary>
+        /// <param name="pos">Position to save</param>
         public static void SavePosition(PositionModel pos)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -259,6 +364,11 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Load a Set of Position based on the Location from the DB
+        /// </summary>
+        /// <param name="location">Location where the Position's are connected</param>
+        /// <returns>List of Position's</returns>
         public static List<PositionModel> GetPositions(int location)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
@@ -269,6 +379,10 @@ namespace MiniStores
             }
         }
         // ************************************************
+        /// <summary>
+        /// Delete a Position from the DB
+        /// </summary>
+        /// <param name="id">Position ID to delete</param>
         public static void DeletePosition(int id)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))

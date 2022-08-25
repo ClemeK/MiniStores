@@ -40,19 +40,19 @@
                 <!--Version-->
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="Title:" FontSize="14" FontWeight="Bold" />
+            <Label x:Name="lblATitle" Grid.Row="0" Grid.Column="0" Content="Title:" FontSize="14" FontWeight="Bold" />
             <Label Grid.Row="0" Grid.Column="1" x:Name="lblTitle" FontSize="14"/>
 
-            <Label  Grid.Row="1" Grid.Column="0" Content="Description:" FontSize="14" FontWeight="Bold"/>
+            <Label  x:Name="lblADescription" Grid.Row="1" Grid.Column="0" Content="Description:" FontSize="14" FontWeight="Bold"/>
             <TextBox  Grid.Row="1" Grid.Column="1" x:Name="tbDescription" FontSize="14" TextWrapping="Wrap" IsReadOnly="True" BorderBrush="#FFF9F9F9"/>
 
-            <Label  Grid.Row="2" Grid.Column="0" Content="Product:" FontSize="14" FontWeight="Bold"/>
+            <Label  x:Name="lblAProduct" Grid.Row="2" Grid.Column="0" Content="Product:" FontSize="14" FontWeight="Bold"/>
             <Label  Grid.Row="2" Grid.Column="1" x:Name="lblProduct" FontSize="14"/>
 
-            <Label  Grid.Row="3" Grid.Column="0" Content="Copyright:" FontSize="14" FontWeight="Bold"/>
+            <Label  x:Name="lblACopyright" Grid.Row="3" Grid.Column="0" Content="Copyright:" FontSize="14" FontWeight="Bold"/>
             <Label  Grid.Row="3" Grid.Column="1" x:Name="lblCopyright" FontSize="14"/>
 
-            <Label  Grid.Row="4" Grid.Column="0" Content="Version:" FontSize="14" FontWeight="Bold"/>
+            <Label  x:Name="lblAVersion" Grid.Row="4" Grid.Column="0" Content="Version:" FontSize="14" FontWeight="Bold"/>
             <Label  Grid.Row="4" Grid.Column="1" x:Name="lblVersion" FontSize="14"/>
         </Grid>
     </StackPanel>

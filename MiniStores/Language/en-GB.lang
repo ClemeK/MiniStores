@@ -1,26 +1,27 @@
 Key,Phrase
+MiniStores,Mini-Stores
 Search,Search
 Part,Part
 Parts,Parts
 Type,Type
 Types,Types
-TypeM,Type:
 Manufacturer,Manufacturer
 Manufacturers,Manufacturers
-ManufacturerM,Manufacturer:
 Location,Location
 Locations,Locations
-LocationM,Location:
 Position,Position
 Positions,Positions
-PositionM,Position:
 Id,Id
 Qty,Qty
 PartId,Part Id:
 PartName,Part Name:
-Quantity,Quantity:
-Price,Price:
-Comment,Comment:
+TypeM,TypeM
+ManufacturerM,Manufacturer:
+LocationM,LocationM
+PositionM,PositionM
+Quantity,Quantity
+Price,Price
+Comment,Comment
 PartList,Part List:
 TypeId,Type Id:
 TypeName,Type Name:
@@ -38,7 +39,6 @@ Add,Add
 Update,Update
 Delete,Delete
 Clear,Clear
-Refresh,Refresh
 Import,Import
 Export,Export
 File,File
@@ -46,3 +46,34 @@ Exit,Exit
 Help,Help
 ViewHelp,View Help
 AboutMiniStores,About MiniStores
+About,About
+Title,Title
+Description,Description
+Product,Product
+Copyright,Copyright
+Version,Version
+Settings,Settings
+Language,Language
+RetainP,Days to Retain Joblog's:
+Debug,Debug
+Save,Save
+Cancel,Cancel
+Setting,Setting
+On,On
+Off,Off
+HelpSubP,Sorry, the help is only in English currently.
+ReloadP,Re-Start Required for the Language change to take place.
+Type:,Type:
+Location:,Location:
+Position:,Position:
+Quantity:,Quantity:
+Price:,Price:
+Comment:,Comment:
+Refresh,Refresh
+Title:,Title:
+Description:,Description:
+Product:,Product:
+Copyright:,Copyright:
+Version:,Version:
+Language:,Language:
+Debug:,Debug:

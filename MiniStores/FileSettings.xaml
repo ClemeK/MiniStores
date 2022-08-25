@@ -22,13 +22,13 @@
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="Language:" FontWeight="Bold"/>
+            <Label x:Name="lblSLanguage" Grid.Row="0" Grid.Column="0" Content="Language:" FontWeight="Bold"/>
             <ComboBox Grid.Row="0" Grid.Column="1" x:Name="cbSetLang" SelectionChanged="cbSettingChanged"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="Days to Retain Joblog's:" FontWeight="Bold"/>
+            <Label x:Name="lblSRetainP" Grid.Row="1" Grid.Column="0" Content="Days to Retain Joblog's:" FontWeight="Bold"/>
             <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbSetRetain" SelectionChanged="tbSettingChanged" PreviewTextInput="tbRetainValidation"/>
 
-            <Label Grid.Row="2" Grid.Column="0" Content="Debug:" FontWeight="Bold" />
+            <Label x:Name="lblSDebug" Grid.Row="2" Grid.Column="0" Content="Debug:" FontWeight="Bold" />
             <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cbSetDebug" SelectionChanged="cbSettingChanged"/>
 
             <Button Grid.Row="4" Grid.Column="0" x:Name="btnSettingSave" Content="Save" Width="100" Click="btnSettingSave_Clicked"/>

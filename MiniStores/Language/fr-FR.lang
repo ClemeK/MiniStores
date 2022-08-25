@@ -1,23 +1,24 @@
 Key,Phrase
+MiniStores,MiniStores
 Search,Chercher
 Part,Partie
 Parts,Les pièces
 Type,Taper
 Types,Types
-TypeM,Les types:
 Manufacturer,Fabricant
 Manufacturers,Fabricants
-ManufacturerM,Fabricant:
 Location,Emplacement
 Locations,Emplacements
-LocationM,Emplacement:
 Position,Position
 Positions,Postes
-PositionM,Position:
 Id,Id
 Qty,Qté
 PartId,Partie Id:
 PartName,Nom de la pièce:
+Type:,Les types:
+ManufacturerM,ManufacturerM
+Location:,LocationM
+Position:,PositionM
 Quantity,Quantité:
 Price,Prix:
 Comment,Commentaire:
@@ -38,7 +39,6 @@ Add,Ajouter
 Update,Mise à jour
 Delete,Effacer
 Clear,Dégager
-Refresh,Rafraîchir
 Import,Importer
 Export,Exporter
 File,Dossier
@@ -46,3 +46,30 @@ Exit,Sortir
 Help,Aider
 ViewHelp,Voir aide
 AboutMiniStores,À propos des MiniStores
+About,À propos de
+Title,Title
+Description,Description
+Product,Product
+Copyright,Copyright
+Version,Version
+Settings,Réglages
+Language,Language
+RetainP,Jours de conservation Joblog's:
+Debug:,Déboguer:
+Save,Sauvegarder
+Cancel,Annuler
+Setting,Paramètre
+Title:,Titre:
+Description:,La description:
+Product:,Produit:
+Copyright:,droits d'auteur:
+Version:,Version:
+Language:,Langue:
+Manufacturer:,Fabricant:
+Location:,Emplacement:
+Position:,Position:
+Refresh,Rafraîchir
+On,Sur
+Off,À l'arrêt
+HelpSubP,Désolé - l'aide n'est actuellement disponible qu'en anglais.
+ReloadP,Redémarrage requis pour que le changement de langue ait lieu.

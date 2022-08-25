@@ -29,6 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ScreenCL\ScreenCL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\Help.rtf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

@@ -8,6 +8,11 @@ namespace MiniStores
 {
     internal class CSVFile
     {
+        /// <summary>
+        /// Get the filename of a file to import
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns>FileName with Path</returns>
         public static bool GetImportFileName(out string filename)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -27,7 +32,11 @@ namespace MiniStores
                 return false;
             }
         }
-
+        /// <summary>
+        /// Get the filename of a file to export
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns>FileName with Path</returns>
         public static bool GetExportFileName(out string filename)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -47,7 +56,12 @@ namespace MiniStores
                 return false;
             }
         }
-
+        /// <summary>
+        /// Read a 1 column list from a CSV file
+        /// </summary>
+        /// <param name="path">File to read</param>
+        /// <param name="header">Header to ignore if there</param>
+        /// <returns>List of 1 column</returns>
         public static List<string> ReadImportFile1(string path, string header)
         {
             string[] lines = System.IO.File.ReadAllLines(path);
@@ -61,7 +75,6 @@ namespace MiniStores
             {
                 if (lines[j] != "")
                 {
-
                     string[] columns = lines[j].Split(',');
 
                     columns[0] = columns[0].Trim();
@@ -75,7 +88,12 @@ namespace MiniStores
 
             return data;
         }
-
+        /// <summary>
+        /// Read a 2 column list from a CSV file
+        /// </summary>
+        /// <param name="path">File to read</param>
+        /// <param name="header">Header to ignore if there</param>
+        /// <returns>List of 2 column</returns>
         public static List<ColumnModel2> ReadImportFile2(string path, string header)
         {
             string[] lines = System.IO.File.ReadAllLines(path);
@@ -105,7 +123,12 @@ namespace MiniStores
 
             return data;
         }
-
+        /// <summary>
+        /// Read a 6 column list from a CSV file
+        /// </summary>
+        /// <param name="path">File to read</param>
+        /// <param name="header">Header to ignore if there</param>
+        /// <returns>List of 6 column</returns>
         public static List<ColumnModel8> ReadImportFile6(string path, string header)
         {
             string[] lines = System.IO.File.ReadAllLines(path);
@@ -141,6 +164,5 @@ namespace MiniStores
 
             return data;
         }
-
     }
 }

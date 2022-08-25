@@ -9,15 +9,17 @@
         public static string Language = "fr-FR";
         private static int logsToKeep = 2;
 
-
+        /// <summary>
+        /// Sets up the Global Setting File
+        /// </summary>
         public GlobalSetting()
         {
             LoadSettings();
         }
         // ***************************
-
-
-        // ***************************
+        /// <summary>
+        /// Get\Set's the Logs to Keep Property
+        /// </summary>
         public static int LogsToKeep
         {
             get
@@ -34,6 +36,9 @@
             }
         }
         // ***************************
+        /// <summary>
+        /// Load's the Setting from File
+        /// </summary>
         public static void LoadSettings()
         {
             var MyConfig = new IniFile("MiniStores.ini");
@@ -70,6 +75,9 @@
 
         }
         // ***************************
+        /// <summary>
+        /// Save's the Setting to a File
+        /// </summary>
         public static void SaveSettings()
         {
             var MyConfig = new IniFile("MiniStores.ini");

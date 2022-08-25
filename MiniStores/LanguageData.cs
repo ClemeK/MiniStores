@@ -1,30 +1,34 @@
 ﻿using MiniStores.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
 namespace MiniStores
 {
-    public class PharseText
+    public class LanguageData
     {
-        public string LangText { get; set; }
-    }
-    // *****************************************
-
-    internal class LanguageData
-    {
-        static Dictionary<string, PharseText> CurrentLanguage =
-            new Dictionary<string, PharseText>();
+        static Dictionary<string, string> CurrentLanguage =
+            new Dictionary<string, string>();
 
         CultureInfo ci = CultureInfo.InstalledUICulture;
 
         private string _path = @"Language\";
         private string _fileName = "Default.lang";
 
+
+        /// <summary>
+        /// Sets up the Language file for the program
+        /// </summary>
+        /// <param name="errorlog">Joblog to write messages too</param>
+        /// <param name="Lang">Language file to read</param>
         public LanguageData(Joblog errorlog, string Lang)
         {
             _fileName = "Default.lang";
             string fullpathandfile = _path + _fileName;
+
+            // Initialise Dictionary
+            InitialiseLanguage();
 
             //Check if the Default Language file exist and if not create it
             if (File.Exists(fullpathandfile) == false)
@@ -48,98 +52,145 @@ namespace MiniStores
             fullpathandfile = _path + _fileName;
             if (File.Exists(fullpathandfile) == true)
             {
-                LoadLanguage(errorlog, fullpathandfile);
+                LoadLanguage(errorlog, fullpathandfile, ci.Name);
             }
             else
             {
                 // else load the default language
                 _fileName = "Default.lang";
                 fullpathandfile = _path + _fileName;
-                LoadLanguage(errorlog, fullpathandfile);
+                LoadLanguage(errorlog, fullpathandfile, ci.Name);
             }
 
             errorlog.InformationMessage("Loaded Language", $"Loaded {_fileName} as a Language.");
 
         }
         // *****************************
+        /// <summary>
+        /// Initialises the Dictionary with all the correct Keys
+        /// </summary>
+        private void InitialiseLanguage()
+        {
+            // List of the Dictionary Key's
+            string[] temp = new string[] {
+                "MiniStores", "Search", "Part",  "Parts", "Type",
+                "Types", "Manufacturer", "Manufacturers", "Location", "Locations",
+                "Position", "Positions", "Id", "Qty", "PartId",
+                "PartName", "TypeM", "ManufacturerM", "LocationM",
+                "PositionM", "Quantity", "Price", "Comment", "PartList",
+                "TypeId", "TypeName", "TypeList", "ManufacturerId", "ManufacturerName",
+                "ManufacturerList", "LocationId", "LocationName", "LocationList", "PositionId",
+                "PositionName", "PositionList", "Add", "Update", "Delete",
+                "Clear", "Import", "Export", "File", "Exit",
+                "Help", "ViewHelp", "AboutMiniStores", "About", "Title",
+                "Description", "Product", "Copyright", "Version",  "Settings",
+                "Language", "RetainP", "Debug", "Save", "Cancel","Setting",
+                "On","Off", "HelpSubP","ReloadP"
+            };
+
+            // Sort the array before adding to the Dictionary
+            temp = ArraySort(temp);
+
+            // Add the Key's to the Dictionary
+            for (int row = 0; row < temp.Length; row++)
+            {
+                // Check to see if the Key exist, and if not add it
+                bool worked = CurrentLanguage.TryGetValue(temp[row], out string? output);
+
+                if (worked == false)
+                {
+                    CurrentLanguage.Add(temp[row], temp[row]);
+                }
+            }
+        }
+        // *****************************
+        /// <summary>
+        /// Add the Default (UK-English) language to the Dictionary
+        /// </summary>
         private void AddDefaultLanguage()
         {
-            // Application Name
-            CurrentLanguage.Add("MiniStores", new PharseText { LangText = "Mini-Stores" });
-            // Tabs
-            CurrentLanguage.Add("Search", new PharseText { LangText = "Search" });
-            CurrentLanguage.Add("Part", new PharseText { LangText = "Part" });
-            CurrentLanguage.Add("Parts", new PharseText { LangText = "Parts" });
-            CurrentLanguage.Add("Type", new PharseText { LangText = "Type" });
-            CurrentLanguage.Add("Types", new PharseText { LangText = "Types" });
-            CurrentLanguage.Add("Manufacturer", new PharseText { LangText = "Manufacturer" });
-            CurrentLanguage.Add("Manufacturers", new PharseText { LangText = "Manufacturers" });
-            CurrentLanguage.Add("Location", new PharseText { LangText = "Location" });
-            CurrentLanguage.Add("Locations", new PharseText { LangText = "Locations" });
-            CurrentLanguage.Add("Position", new PharseText { LangText = "Position" });
-            CurrentLanguage.Add("Positions", new PharseText { LangText = "Positions" });
-            // Search Tab
-            CurrentLanguage.Add("Id", new PharseText { LangText = "Id" });
-            CurrentLanguage.Add("Qty", new PharseText { LangText = "Qty" });
-            // Parts Tab
-            CurrentLanguage.Add("PartId", new PharseText { LangText = "Part Id:" });
-            CurrentLanguage.Add("PartName", new PharseText { LangText = "Part Name:" });
-            CurrentLanguage.Add("TypeM", new PharseText { LangText = "Type:" });
-            CurrentLanguage.Add("ManufacturerM", new PharseText { LangText = "Manufacturer:" });
-            CurrentLanguage.Add("LocationM", new PharseText { LangText = "Location:" });
-            CurrentLanguage.Add("PositionM", new PharseText { LangText = "Position:" });
-            CurrentLanguage.Add("Quantity", new PharseText { LangText = "Quantity:" });
-            CurrentLanguage.Add("Price", new PharseText { LangText = "Price:" });
-            CurrentLanguage.Add("Comment", new PharseText { LangText = "Comment:" });
-            CurrentLanguage.Add("PartList", new PharseText { LangText = "Part List:" });
-            // Type Tab
-            CurrentLanguage.Add("TypeId", new PharseText { LangText = "Type Id:" });
-            CurrentLanguage.Add("TypeName", new PharseText { LangText = "Type Name:" });
-            CurrentLanguage.Add("TypeList", new PharseText { LangText = "Type List:" });
-            // Manufacturer Tab
-            CurrentLanguage.Add("ManufacturerId", new PharseText { LangText = "Manufacturer Id:" });
-            CurrentLanguage.Add("ManufacturerName", new PharseText { LangText = "Manufacturer Name:" });
-            CurrentLanguage.Add("ManufacturerList", new PharseText { LangText = "Manufacturer List:" });
-            // Location Tab
-            CurrentLanguage.Add("LocationId", new PharseText { LangText = "Location Id:" });
-            CurrentLanguage.Add("LocationName", new PharseText { LangText = "Location Name:" });
-            CurrentLanguage.Add("LocationList", new PharseText { LangText = "Location List:" });
-            // Position Tab
-            CurrentLanguage.Add("PositionId", new PharseText { LangText = "Position Id:" });
-            CurrentLanguage.Add("PositionName", new PharseText { LangText = "Position Name:" });
-            CurrentLanguage.Add("PositionList", new PharseText { LangText = "Position List:" });
-            // Buttons
-            CurrentLanguage.Add("Add", new PharseText { LangText = "Add" });
-            CurrentLanguage.Add("Update", new PharseText { LangText = "Update" });
-            CurrentLanguage.Add("Delete", new PharseText { LangText = "Delete" });
-            CurrentLanguage.Add("Clear", new PharseText { LangText = "Clear" });
-            CurrentLanguage.Add("Refresh", new PharseText { LangText = "Refresh" });
-            CurrentLanguage.Add("Import", new PharseText { LangText = "Import" });
-            CurrentLanguage.Add("Export", new PharseText { LangText = "Export" });
-            // Menu
-            CurrentLanguage.Add("File", new PharseText { LangText = "File" });
-            CurrentLanguage.Add("Exit", new PharseText { LangText = "Exit" });
-            CurrentLanguage.Add("Help", new PharseText { LangText = "Help" });
-            CurrentLanguage.Add("ViewHelp", new PharseText { LangText = "View Help" });
-            CurrentLanguage.Add("AboutMiniStores", new PharseText { LangText = "About MiniStores" });
-            // Help\About
-            CurrentLanguage.Add("About", new PharseText { LangText = "About" });
-            CurrentLanguage.Add("Title", new PharseText { LangText = "Title:" });
-            CurrentLanguage.Add("Description", new PharseText { LangText = "Description:" });
-            CurrentLanguage.Add("Product", new PharseText { LangText = "Product:" });
-            CurrentLanguage.Add("Copyright", new PharseText { LangText = "Copyright:" });
-            CurrentLanguage.Add("Version", new PharseText { LangText = "Version:" });
-            // Help\Help
-            CurrentLanguage.Add("Help", new PharseText { LangText = "Help" });
-            // File\Settings
-            CurrentLanguage.Add("Settings", new PharseText { LangText = "Settings" });
-            CurrentLanguage.Add("Language", new PharseText { LangText = "Language:" });
-            CurrentLanguage.Add("RetainP", new PharseText { LangText = "Days to Retain Joblog's:" });
-            CurrentLanguage.Add("Debug", new PharseText { LangText = "Debug:" });
-            CurrentLanguage.Add("Save", new PharseText { LangText = "Save" });
-            CurrentLanguage.Add("Cancel", new PharseText { LangText = "Cancel" });
+            string[,] temp = new string[,] {
+            {"MiniStores", "Mini-Stores"},
+            {"Search","Search" },
+            {"Part" ,"Part"},
+            {"Parts","Parts" },
+            {"Type","Type" },
+            {"Types","Types" },
+            {"Manufacturer","Manufacturer" },
+            {"Manufacturers","Manufacturers" },
+            {"Location","Location" },
+            {"Locations","Locations" },
+            {"Position","Position" },
+            {"Positions","Positions" },
+            {"Id","Id" },
+            {"Qty","Qty" },
+            {"PartId","Part Id:" },
+            {"PartName","Part Name:" },
+            {"Type:","Type:" },
+            {"ManufacturerM","Manufacturer:" },
+            {"Location:","Location:" },
+            {"Position:","Position:" },
+            {"Quantity:","Quantity:" },
+            {"Price:","Price:" },
+            {"Comment:","Comment:" },
+            {"PartList","Part List:" },
+            {"TypeId","Type Id:" },
+            {"TypeName","Type Name:" },
+            {"TypeList","Type List:" },
+            {"ManufacturerId","Manufacturer Id:" },
+            {"ManufacturerName","Manufacturer Name:" },
+            {"ManufacturerList","Manufacturer List:" },
+            {"LocationId","Location Id:" },
+            {"LocationName","Location Name:" },
+            {"LocationList","Location List:" },
+            {"PositionId","Position Id:" },
+            {"PositionName","Position Name:" },
+            {"PositionList","Position List:" },
+            {"Add","Add" },
+            {"Update","Update" },
+            {"Delete","Delete" },
+            {"Clear","Clear" },
+            {"Refresh","Refresh" },
+            {"Import","Import" },
+            {"Export","Export" },
+            {"File","File" },
+            {"Exit","Exit" },
+            {"Help","Help" },
+            {"ViewHelp","View Help" },
+            {"AboutMiniStores","About MiniStores" },
+            {"About","About" },
+            {"Title:","Title:" },
+            {"Description:","Description:" },
+            {"Product:","Product:" },
+            {"Copyright:","Copyright:" },
+            {"Version:","Version:" },
+            {"Settings","Settings" },
+            {"Language:","Language:" },
+            {"RetainP","Days to Retain Joblog's:" },
+            {"Debug:","Debug:" },
+            {"Save","Save" },
+            {"Cancel","Cancel" },
+            {"Setting", "Setting" },
+            {"On", "On" },
+            {"Off", "Off" },
+            {"HelpSubP", "Sorry, the help is only in English currently." },
+            {"ReloadP", "Re-Start Required for the Language change to take place." }
+            };
+
+            // Take the List and put it into the Dictionary
+            for (int row = 0; row < (temp.Length / 2); row++)
+            {
+                string myKey = temp[row, 0];
+                CurrentLanguage[myKey] = temp[row, 1];
+            }
         }
         // ****
+        /// <summary>
+        /// Save a Dictionary file to disk.
+        /// </summary>
+        /// <param name="el">Joblog to write messages too</param>
+        /// <param name="file">File to write to</param>
+        /// <param name="lang">Language the file is writing</param>
         private void SaveLanguage(Joblog el, string file, string lang)
         {
             string[] contents = new string[CurrentLanguage.Count + 1];
@@ -151,7 +202,7 @@ namespace MiniStores
 
             foreach (var item in CurrentLanguage)
             {
-                contents[i] = item.Key + "," + item.Value.LangText;
+                contents[i] = item.Key + "," + item.Value;
                 i++;
             }
 
@@ -160,25 +211,45 @@ namespace MiniStores
             el.InformationMessage($"{lang} Language file Created Successful", "Language file contains " + CurrentLanguage.Count + " words or phrases.");
         }
         // ****
-        private void LoadLanguage(Joblog el, string fileToLoad)
+        /// <summary>
+        /// Loads a Language file from disk.
+        /// </summary>
+        /// <param name="el">Joblog to write messages too</param>
+        /// <param name="fileToLoad">File to read from</param>
+        /// <param name="ciName">Language the file is reading</param>
+        private void LoadLanguage(Joblog el, string fileToLoad, string ciName)
         {
             List<ColumnModel2> inputFile = new List<ColumnModel2>();
 
             inputFile = CSVFile.ReadImportFile2(fileToLoad, "Phrase");
 
+            int count = 0;
+
             if (inputFile.Count > -1)
             {
+                // Clear the Language Dictionary and re-Initialise it
                 CurrentLanguage.Clear();
+                InitialiseLanguage();
 
                 foreach (var set in inputFile)
                 {
-                    CurrentLanguage.Add(set.First, new PharseText { LangText = set.Second });
-                }
+                    CurrentLanguage[set.First] = set.Second;
 
+                    count++;
+                }
             }
+
             // Check all phrases exist...Add if not
+            if (count != CurrentLanguage.Count)
+            {
+                SaveLanguage(el, fileToLoad, ciName);
+            }
         }
         // ****
+        /// <summary>
+        /// Creates a list to the available languages in the disk folder
+        /// </summary>
+        /// <returns>Returns a List of Filename (en-UK.lang)</returns>
         public List<string> AvaibleLanguages()
         {
             List<string> output = new List<string>();
@@ -212,14 +283,53 @@ namespace MiniStores
                     output.Add(files[f].Substring(folderLength, fileLength));
                 }
             }
-
-
             return output;
         }
         // ****
-        public Dictionary<string, PharseText> GetLanguage()
+        /// <summary>
+        /// Returns the name of the current language
+        /// </summary>
+        /// <returns>language name</returns>
+        public Dictionary<string, string> GetLanguage()
         {
             return CurrentLanguage;
+        }
+        // ****
+        /// <summary>
+        /// Sorts a string array into assenting order.
+        /// </summary>
+        /// <param name="stringList">array to sort</param>
+        /// <returns>string array</returns>
+        static string[] ArraySort(string[] stringList)
+        {
+            string[] output = stringList;
+            bool swaped = false;
+
+            do
+            {
+                swaped = false;
+
+                for (int i = 1; i < output.Length; i++)
+                {
+
+                    int comparison = String.Compare(output[i - 1], output[i], comparisonType: StringComparison.OrdinalIgnoreCase);
+
+                    // use < for largest to Smallest
+                    // use > for smallest to largest
+
+                    if (comparison > 0)
+                    {
+                        string temp = output[i];
+                        output[i] = output[i - 1];
+                        output[i - 1] = temp;
+
+                        swaped = true;
+                    }
+                }
+
+            } while (swaped == true);
+
+            return output;
         }
         // ****
     }

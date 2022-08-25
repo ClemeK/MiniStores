@@ -10,11 +10,24 @@ namespace MiniStores
     public partial class FileSettings : Window
     {
         bool languageChange = false;
+        Dictionary<string, string> ScreenText = new Dictionary<string, string>();
 
-        public FileSettings(Joblog errlog, GlobalSetting gs1)
+        public FileSettings(Joblog errlog)
         {
+            LanguageData AppLanguage = new LanguageData(errlog, GlobalSetting.Language);
+
+            ScreenText = AppLanguage.GetLanguage();
 
             InitializeComponent();
+
+            // Set-up Screen Language
+            this.Title = LookUpTranslation(ScreenText, "Settings");
+
+            lblSLanguage.Content = LookUpTranslation(ScreenText, "Language:");
+            lblSRetainP.Content = LookUpTranslation(ScreenText, "RetainP");
+            lblSDebug.Content = LookUpTranslation(ScreenText, "Debug:");
+            btnSettingSave.Content = LookUpTranslation(ScreenText, "Save");
+            btnSettingCancle.Content = LookUpTranslation(ScreenText, "Cancel");
 
             // Language to use.
             LoadLanguageList(errlog);
@@ -24,25 +37,38 @@ namespace MiniStores
             tbSetRetain.Text = GlobalSetting.LogsToKeep.ToString();
 
             // Debugging On\Off.
-            cbSetDebug.Items.Add("On");
-            cbSetDebug.Items.Add("Off");
-            cbSetDebug.SelectedValue = GlobalSetting.DebugApp == true ? "On" : "Off";
+            cbSetDebug.Items.Add(LookUpTranslation(ScreenText, "On"));
+            cbSetDebug.Items.Add(LookUpTranslation(ScreenText, "Off"));
+            cbSetDebug.SelectedValue = GlobalSetting.DebugApp == true ? LookUpTranslation(ScreenText, "On") : LookUpTranslation(ScreenText, "Off");
 
             btnSettingSave.IsEnabled = false;
         }
 
         // *****************************************
         // ***
+        /// <summary>
+        /// TextBox Alert that something MAY have changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tbSettingChanged(object sender, RoutedEventArgs e)
         {
             SomethingChanged();
         }
         // ***
+        /// <summary>
+        /// ComboBox Alert that something MAY have changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbSettingChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             SomethingChanged();
         }
         // ***
+        /// <summary>
+        ///  Check to see if something has changed on the Setting Screen
+        /// </summary>
         private void SomethingChanged()
         {
             bool changed = false;
@@ -79,6 +105,11 @@ namespace MiniStores
 
         }
         // ***
+        /// <summary>
+        /// Save the Global Setting to file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSettingSave_Clicked(object sender, RoutedEventArgs e)
         {
             GlobalSetting.SaveSettings();
@@ -87,18 +118,27 @@ namespace MiniStores
 
             if (languageChange == true)
             {
-                MessageBox.Show("Re-Start Required for the Language change to take place.", "Mini-Store",
+                MessageBox.Show(LookUpTranslation(ScreenText, "ReloadP"), "Mini-Store",
                                 MessageBoxButton.OK, MessageBoxImage.Information);
 
                 languageChange = false;
             }
         }
         // ***
+        /// <summary>
+        /// Close the File Setting screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSettingCancle_Clicked(object sender, RoutedEventArgs e)
         {
             Close();
         }
         // ***
+        /// <summary>
+        /// Load the Language list into the ComboBox
+        /// </summary>
+        /// <param name="el">JobLog to write messages too</param>
         private void LoadLanguageList(Joblog el)
         {
             List<string> languages = new List<string>();
@@ -113,11 +153,37 @@ namespace MiniStores
             }
         }
         // ***
+        /// <summary>
+        /// Validate the Number only fields
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tbRetainValidation(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             // Only allow numbers in the textbox
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+        // ***
+        /// <summary>
+        /// Fetch's the correct Language Phrase from the Dictionary
+        /// </summary>
+        /// <param name="dic">Dictionary to use</param>
+        /// <param name="lookUpKey">Key to look up</param>
+        /// <returns></returns>
+        public string LookUpTranslation(Dictionary<string, string> dic, string lookUpKey)
+        {
+            bool worked = dic.TryGetValue(lookUpKey, out string? output);
+
+            if (worked)
+            {
+                return output;
+            }
+            else
+            {
+                return "Unknown (" + lookUpKey + ")";
+            }
+        }
+
     }
 }
