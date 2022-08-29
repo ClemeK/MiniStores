@@ -1,18 +1,18 @@
 ﻿namespace MiniStores
 {
-    public class GlobalSetting
+    public static class GlobalSetting
     {
         // Properties ONLY
         public static bool SettingChanged = true;
 
         public static bool DebugApp = false;
-        public static string Language = "fr-FR";
+        public static string Language = "";
         private static int logsToKeep = 2;
 
         /// <summary>
         /// Sets up the Global Setting File
         /// </summary>
-        public GlobalSetting()
+        public static void InitiliasSettings()
         {
             LoadSettings();
         }

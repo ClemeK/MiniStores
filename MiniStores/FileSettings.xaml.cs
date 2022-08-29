@@ -73,28 +73,37 @@ namespace MiniStores
         {
             bool changed = false;
 
-            if (cbSetLang.SelectedValue.ToString() != GlobalSetting.Language)
+            if (cbSetLang.SelectedValue != null)
             {
-                GlobalSetting.Language = cbSetLang.Text;
-                languageChange = true;
-                changed = true;
-            }
-            else
-            {
-                languageChange = false;
-            }
-
-            if (tbSetRetain.Text != GlobalSetting.LogsToKeep.ToString() && tbSetRetain.Text != "")
-            {
-                GlobalSetting.LogsToKeep = int.Parse(tbSetRetain.Text);
-                changed = true;
+                if (cbSetLang.SelectedValue.ToString() != GlobalSetting.Language)
+                {
+                    GlobalSetting.Language = cbSetLang.Text;
+                    languageChange = true;
+                    changed = true;
+                }
+                else
+                {
+                    languageChange = false;
+                }
             }
 
-            bool debuging = cbSetDebug.SelectedValue == "On" ? true : false;
-            if (debuging != GlobalSetting.DebugApp)
+            if (tbSetRetain.Text != null)
             {
-                GlobalSetting.DebugApp = cbSetDebug.SelectedValue == "On" ? true : false;
-                changed = true;
+                if (tbSetRetain.Text != GlobalSetting.LogsToKeep.ToString() && tbSetRetain.Text != "")
+                {
+                    GlobalSetting.LogsToKeep = int.Parse(tbSetRetain.Text);
+                    changed = true;
+                }
+            }
+
+            if (cbSetDebug.SelectedValue != null)
+            {
+                bool debuging = cbSetDebug.SelectedValue.ToString() == "On" ? true : false;
+                if (debuging != GlobalSetting.DebugApp)
+                {
+                    GlobalSetting.DebugApp = cbSetDebug.SelectedValue == "On" ? true : false;
+                    changed = true;
+                }
             }
 
 

@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
-
 /*
 * Title:    MiniStores
 * Author:   Kelvin Clements
@@ -15,14 +14,13 @@ using System.Windows.Controls;
 * Developer's Note's
 * ==================
 * + Hungarian Notation is used for object in the UI.
-* + 
-* + 
 * 
 * Developer's Log
 * ===============
-* + 21-Aug-2022 - Changed how the Lingual system works (easier for me)
+* + 25-Aug-2022 - Updated the Comments throughout the program.
+* + 21-Aug-2022 - Changed how the Lingual system works (easier for me).
 * + 17-Aug-2022 - Added Setting screen.
-* + 15-Aug-2022 - Made App Multi-Lingual
+* + 15-Aug-2022 - Made App Multi-Lingual.
 * + 09-Aug-2022 - Added INI file to save the settings (INIFile.cs).
 * + 01-Aug-2022 - Added About screen.
 * + 22-Jul-2022 - Added Simple Error logging (JobLog.cs). 
@@ -30,6 +28,11 @@ using System.Windows.Controls;
 * + 27-Jul-2022 - Added SQLite as a DB as I can not get the MS-SQL to work on my machine.
 * + 23-Jun-2022 - Applications Created.
 */
+
+// TODO - Need to add Up\Down buttons to increase\decrease Quantity on Parts Screen.
+// TODO - Add Print button to the search screen.
+// TODO - add a Language editor screen.
+// TODO - UPDATE THE HELP FILE!!!
 
 namespace MiniStores
 {
@@ -47,7 +50,7 @@ namespace MiniStores
         List<PositionModel> PosSubSet = new List<PositionModel>();
 
         Dictionary<string, string> ScreenText = new Dictionary<string, string>();
-        GlobalSetting gs = new GlobalSetting();
+
 
         Joblog errorlog = new Joblog("MiniStore", GlobalSetting.LogsToKeep);
 
@@ -55,6 +58,8 @@ namespace MiniStores
         // ***      M A I N   W I N D O W
         public MainWindow()
         {
+            GlobalSetting.InitiliasSettings();
+
             LanguageData AppLanguage = new LanguageData(errorlog, GlobalSetting.Language);
 
             ScreenText = AppLanguage.GetLanguage();
@@ -249,7 +254,7 @@ namespace MiniStores
                 FirstConditionSet = true;
             }
 
-            if (cbSearchType.SelectedIndex > 0)
+            if (cbSearchType.SelectedIndex > -1)
             {
                 if (FirstConditionSet == true)
                 {
@@ -260,7 +265,7 @@ namespace MiniStores
             }
 
 
-            if (cbSearchManu.SelectedIndex > 0)
+            if (cbSearchManu.SelectedIndex > -1)
             {
                 if (FirstConditionSet == true)
                 {
@@ -270,7 +275,7 @@ namespace MiniStores
                 FirstConditionSet = true;
             }
 
-            if (cbSearchLoc.SelectedIndex > 0)
+            if (cbSearchLoc.SelectedIndex > -1)
             {
                 if (FirstConditionSet == true)
                 {
@@ -280,8 +285,8 @@ namespace MiniStores
                 FirstConditionSet = true;
             }
 
-            if (cbSearchLoc.SelectedIndex > 0
-                && cbSearchPos.SelectedIndex > 0)
+            if (cbSearchLoc.SelectedIndex > -1
+                && cbSearchPos.SelectedIndex > -1)
             {
                 if (FirstConditionSet == true)
                 {
@@ -636,6 +641,8 @@ namespace MiniStores
         {
             bool error = false;
 
+            // TODO - Create Validate Part screen for Add and Update
+
             if (tbPartName.Text == "") error = true;
             if (tbPartQty.Text == "") error = true;
             if (cbType.Text == "") error = true;
@@ -696,6 +703,8 @@ namespace MiniStores
                 Parts[index].ManufacturerFK = FindManu((string)cbManufacturer.SelectedValue);
                 Parts[index].LocationFK = FindLocation((string)cbLocation.SelectedValue);
                 Parts[index].PositionFK = FindPosition(Parts[index].LocationFK, (string)cbPosition.SelectedValue);
+
+                // TODO - Need to check for Qty=0 and delete 
 
                 if (tbPrice.Text != "")
                 {
@@ -1023,12 +1032,12 @@ namespace MiniStores
                 RefreshTypesLB();
 
                 errorlog.InformationMessage("Type Added", t.ToString());
+
             }
             else
             {
                 MessageBox.Show("Type Name field is blank!", "Types Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
         /// <summary>
         /// Update the selected type
