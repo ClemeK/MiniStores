@@ -20,7 +20,9 @@ namespace MiniStores
 
             InitializeComponent();
 
-            lblHTitle.Content = LookUpTranslation(ScreenText, "Help");
+            this.Title = LookUpTranslation(ScreenText, "Help");
+
+            lblHTitle.Content = LookUpTranslation(ScreenText, "MiniStores");
             lblHSubTitle.Content = LookUpTranslation(ScreenText, "HelpSubP");
 
             string fileName = @"C:\Users\we364\source\repos\MiniStores\MiniStores\Resources\Help.rtf";

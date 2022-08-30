@@ -21,7 +21,9 @@ namespace MiniStores
             InitializeComponent();
 
             // Set-up Screen Language
-            this.Title = LookUpTranslation(ScreenText, "Settings");
+            this.Title = LookUpTranslation(ScreenText, "MiniStores");
+
+            lblTitle.Content = LookUpTranslation(ScreenText, "Settings");
 
             lblSLanguage.Content = LookUpTranslation(ScreenText, "Language:");
             lblSRetainP.Content = LookUpTranslation(ScreenText, "RetainP");

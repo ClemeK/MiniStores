@@ -12,13 +12,55 @@ namespace MiniStores
     {
         // ***
         /// <summary>
-        /// Retrives the connection string from the Config Manager
+        /// Retrieves the connection string from the Configure Manager
         /// </summary>
         /// <param name="id"></param>
         /// <returns>string = connection name</returns>
         private static string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
+        }
+        // ************************************************
+        // ************************************************
+        /// <summary>
+        /// Get the schema version number
+        /// </summary>
+        /// <returns>Returns highest version number</returns>
+        public static int GetSchemaVersion()
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                // get all the schema's
+                var schemas = cnn.Query<SchemaModel>("select * from SchemaUpdates", new DynamicParameters());
+
+                int output = schemas.Max(x => x.SVersion);
+
+                return output;
+            }
+        }
+        /// <summary>
+        /// Save's the Schema Version after Update
+        /// </summary>
+        /// <param name="sm">Schema model</param>
+        public static void SaveSchemaVersion(SchemaModel sm)
+        {
+            // get all the schema's
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                cnn.Execute("insert into SchemaUpdates ( SVersion, SDateTime) " +
+                    "values ( @SVersion, @SDateTime)", sm);
+            }
+        }
+        /// <summary>
+        /// Update's the schema
+        /// </summary>
+        /// <param name="UpdateText">Update Command String</param>
+        public static void UpdateSchema(string UpdateText)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                cnn.Execute(UpdateText, new DynamicParameters());
+            }
         }
         // ************************************************
         // ************************************************

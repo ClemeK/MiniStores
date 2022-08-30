@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Mini-Stores" Height="210" Width="400" WindowStartupLocation="CenterScreen">
     <StackPanel>
-        <Label Content="Settings" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
+        <Label x:Name="lblTitle" Content="Settings" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

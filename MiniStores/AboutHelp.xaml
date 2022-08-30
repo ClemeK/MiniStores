@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniStores"
         mc:Ignorable="d"
-        Title="Mini-Stores" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Help" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <StackPanel>
-        <Label x:Name="lblHTitle" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold">Help</Label>
+        <Label x:Name="lblHTitle" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold">Mini-Stores</Label>
         <Label x:Name="lblHSubTitle" HorizontalAlignment="Center" FontSize="12" FontWeight="Bold">Sorry, the help is only in English currently.</Label>
         <RichTextBox x:Name="HelpText" IsReadOnly="True" VerticalScrollBarVisibility="Visible" Height="350"/>
     </StackPanel>

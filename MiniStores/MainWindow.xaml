@@ -1,5 +1,6 @@
 ﻿<Window x:Class="MiniStores.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -45,7 +46,7 @@
 
             <Image Grid.Column="0" Stretch="Fill" HorizontalAlignment="Stretch" Height="100"
                    VerticalAlignment="Stretch" Source="Resources\shelf_full_icon.png"></Image>
-            <Label Grid.Column="1" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center" 
+            <Label x:Name="lblMainTitle" Grid.Column="1" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center" 
                    VerticalAlignment="Center">Mini Stores</Label>
         </Grid>
 
@@ -160,7 +161,16 @@
                         <TextBox x:Name="tbPartName" Text="xXx" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top"  Background="#FFF9F6F6" />
 
                         <Label x:Name="lblPQuantity" Content="Quantity:" Grid.Row="2" Grid.Column="0"/>
-                        <TextBox x:Name="tbPartQty" Text="0" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"  Height="25" Width="160" TextWrapping="Wrap"  VerticalAlignment="Top" PreviewTextInput="tbRetainValidation" Foreground="#FF080808" Background="#FFF7F5F5" />
+                        
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" >
+                        <TextBox x:Name="tbPartQty" Text="0"  HorizontalAlignment="Left"  Height="25" Width="110" TextWrapping="Wrap"  VerticalAlignment="Top" PreviewTextInput="tbRetainValidation" Foreground="#FF080808" Background="#FFF7F5F5" />
+                            <Button x:Name="btnQtyUp"  Height="25" Width="25" Click="btnQtyUp_Click" >
+                                <fa:ImageAwesome Icon="ArrowUp" Width="25" />
+                            </Button>
+                            <Button x:Name="btnQtyDown" Height="25" Width="25" Click="btnQtyDown_Click" >
+                                <fa:ImageAwesome Icon="ArrowDown" Width="25" />
+                            </Button>
+                        </StackPanel>
 
                         <Label x:Name="lblPType" Content="Type:" Grid.Row="3" Grid.Column="0"/>
                         <ComboBox x:Name="cbType"  Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Width="160" SelectionChanged="TypeCB_Changed" Foreground="#FF080808" Background="#FFF7F5F5"/>

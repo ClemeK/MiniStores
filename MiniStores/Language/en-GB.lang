@@ -1,70 +1,70 @@
 Key,Phrase
-MiniStores,Mini-Stores
-Search,Search
-Part,Part
-Parts,Parts
-Type,Type
-Types,Types
-Manufacturer,Manufacturer
-Manufacturers,Manufacturers
-Location,Location
-Locations,Locations
-Position,Position
-Positions,Positions
-Id,Id
-Qty,Qty
-PartId,Part Id:
-PartName,Part Name:
-TypeM,TypeM
-ManufacturerM,Manufacturer:
-LocationM,LocationM
-PositionM,PositionM
-Quantity,Quantity
-Price,Price
-Comment,Comment
-PartList,Part List:
-TypeId,Type Id:
-TypeName,Type Name:
-TypeList,Type List:
-ManufacturerId,Manufacturer Id:
-ManufacturerName,Manufacturer Name:
-ManufacturerList,Manufacturer List:
-LocationId,Location Id:
-LocationName,Location Name:
-LocationList,Location List:
-PositionId,Position Id:
-PositionName,Position Name:
-PositionList,Position List:
+About,About
+AboutMiniStores,AboutMiniStores
 Add,Add
-Update,Update
-Delete,Delete
+Cancel,Cancel
 Clear,Clear
-Import,Import
+Comment,Comment
+Copyright,Copyright
+Debug,Debug
+Delete,Delete
+DeleteP,Part Quantity is now Zero. Do you want me to delete it from the database?
+Description,Description
+Exit,Exit
 Export,Export
 File,File
-Exit,Exit
 Help,Help
-ViewHelp,View Help
-AboutMiniStores,About MiniStores
-About,About
-Title,Title
-Description,Description
-Product,Product
-Copyright,Copyright
-Version,Version
-Settings,Settings
+HelpSubP,Sorry. The help is only in English currently.
+Id,Id
+Import,Import
 Language,Language
-RetainP,Days to Retain Joblog's:
-Debug,Debug
-Save,Save
-Cancel,Cancel
-Setting,Setting
-On,On
-Off,Off
-HelpSubP,Sorry, the help is only in English currently.
-ReloadP,Re-Start Required for the Language change to take place.
-Type:,Type:
+Location,Location
 Location:,Location:
+LocationId,Location Id:
+LocationList,Location List:
+LocationName,Location Name:
+Locations,Locations
+Manufacturer,Manufacturer
+Manufacturer:,Manufacturer:
+ManufacturerId,Manufacturer Id:
+ManufacturerList,Manufacturer List:
+ManufacturerName,Manufacturer Name:
+Manufacturers,Manufacturers
+MiniStores,Mini-Stores
+Off,Off
+On,On
+Part,Part
+PartId,Part Id:
+PartList,Part List:
+PartName,Part Name:
+Parts,Parts
+Position,Position
+PositionId,Position Id:
+PositionList,Position List:
+PositionM,PositionM
+PositionName,Position Name:
+Positions,Positions
+Price,Price
+Product,Product
+Qty,Qty
+Quantity,Quantity
+ReloadP,Re-Start Required for the Language change to take place.
+RetainP,Days to Retain Joblog's:
+Save,Save
+Search,Search
+Setting,Setting
+Settings,Settings
+Title,Title
+Type,Type
+Type:,Type:
+TypeId,Type Id:
+TypeList,Type List:
+TypeName,Type Name:
+Types,Types
+Update,Update
+Version,Version
+ViewHelp,View Help
+ManufacturerM,Manufacturer:
 Position:,Position:
 Quantity:,Quantity:
 Price:,Price:

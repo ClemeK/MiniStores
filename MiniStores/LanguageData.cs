@@ -72,11 +72,12 @@ namespace MiniStores
         private void InitialiseLanguage()
         {
             // List of the Dictionary Key's
+            // * Put a P at the end of key to indicate a Phrase
             string[] temp = new string[] {
                 "MiniStores", "Search", "Part",  "Parts", "Type",
                 "Types", "Manufacturer", "Manufacturers", "Location", "Locations",
                 "Position", "Positions", "Id", "Qty", "PartId",
-                "PartName", "TypeM", "ManufacturerM", "LocationM",
+                "PartName", "Type:", "Manufacturer:", "Location:",
                 "PositionM", "Quantity", "Price", "Comment", "PartList",
                 "TypeId", "TypeName", "TypeList", "ManufacturerId", "ManufacturerName",
                 "ManufacturerList", "LocationId", "LocationName", "LocationList", "PositionId",
@@ -85,7 +86,7 @@ namespace MiniStores
                 "Help", "ViewHelp", "AboutMiniStores", "About", "Title",
                 "Description", "Product", "Copyright", "Version",  "Settings",
                 "Language", "RetainP", "Debug", "Save", "Cancel","Setting",
-                "On","Off", "HelpSubP","ReloadP"
+                "On","Off", "HelpSubP","ReloadP", "DeleteP"
             };
 
             // Sort the array before adding to the Dictionary
@@ -157,7 +158,6 @@ namespace MiniStores
             {"Exit","Exit" },
             {"Help","Help" },
             {"ViewHelp","View Help" },
-            {"AboutMiniStores","About MiniStores" },
             {"About","About" },
             {"Title:","Title:" },
             {"Description:","Description:" },
@@ -173,8 +173,9 @@ namespace MiniStores
             {"Setting", "Setting" },
             {"On", "On" },
             {"Off", "Off" },
-            {"HelpSubP", "Sorry, the help is only in English currently." },
-            {"ReloadP", "Re-Start Required for the Language change to take place." }
+            {"HelpSubP", "Sorry. The help is only in English currently." },
+            {"ReloadP", "Re-Start Required for the Language change to take place." },
+            {"DeleteP","Part Quantity is now Zero. Do you want me to delete it from the database?" }
             };
 
             // Take the List and put it into the Dictionary

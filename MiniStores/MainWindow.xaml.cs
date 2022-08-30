@@ -1,9 +1,11 @@
 ﻿using MiniStores.Models;
+using MiniStores.SchemaUpdates;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+
 
 /*
 * Title:    MiniStores
@@ -17,6 +19,9 @@ using System.Windows.Controls;
 * 
 * Developer's Log
 * ===============
+* + 30-Aug-2022 - Added Schema update facility.
+* + 29-Aug-2022 - Added Up\Down buttons to the Parts\Quantity fields (Now a Number spinner)
+* + 29-Aug-2022 - Changed the Parts Screen to check that Quantity = Zero, and the delete if is.
 * + 25-Aug-2022 - Updated the Comments throughout the program.
 * + 21-Aug-2022 - Changed how the Lingual system works (easier for me).
 * + 17-Aug-2022 - Added Setting screen.
@@ -29,9 +34,8 @@ using System.Windows.Controls;
 * + 23-Jun-2022 - Applications Created.
 */
 
-// TODO - Need to add Up\Down buttons to increase\decrease Quantity on Parts Screen.
 // TODO - Add Print button to the search screen.
-// TODO - add a Language editor screen.
+// TODO - Add a Language editor screen.
 // TODO - UPDATE THE HELP FILE!!!
 
 namespace MiniStores
@@ -67,11 +71,32 @@ namespace MiniStores
 
             InitializeComponent();
 
+            CheckSchemaVersion();
+
             InitliseApp();
 
             SetScreenLanguage();
 
             errorlog.InformationMessage("Program Initialised");
+        }
+        /// <summary>
+        /// Check to see if the Schema need an update
+        /// </summary>
+        private void CheckSchemaVersion()
+        {
+            // Additional Schema's to the list below 
+            List<ISchema> Updates = new List<ISchema>()
+            {
+                { new SchemaUpdates.DBSchema2()},
+                { new SchemaUpdates.DBSchema3()}
+            };
+
+            foreach (ISchema update in Updates)
+            {
+                update.UpdateSchema(SQLiteDataAccess.GetSchemaVersion());
+            }
+
+
         }
         /// <summary>
         /// Load all the ComboBox's and ListBox's and set the Button On or Off
@@ -116,6 +141,8 @@ namespace MiniStores
         {
             // Yes I know this isn't the best way to do this, but it's easier for me to understand
 
+            lblMainTitle.Content = LookUpTranslation("MiniStores");
+
             // Menu's
             MFile.Header = LookUpTranslation("File");
             MFSetting.Header = LookUpTranslation("Settings");
@@ -137,7 +164,7 @@ namespace MiniStores
 
             MHelp.Header = LookUpTranslation("Help");
             MHView.Header = LookUpTranslation("ViewHelp");
-            MHAbout.Header = LookUpTranslation("AboutMiniStores");
+            MHAbout.Header = LookUpTranslation("About");
 
             // Tab Names
             tiSearch.Header = LookUpTranslation("Search");
@@ -633,24 +660,32 @@ namespace MiniStores
             tbComment.Text = "";
         }
         /// <summary>
+        /// Validates the Parts screen
+        /// </summary>
+        /// <returns>True if passed</returns>
+        private bool ValidatePartsSrceen()
+        {
+            bool output = true;
+
+            if (tbPartName.Text == "") output = false;
+            if (tbPartQty.Text == "") output = false;
+            if (cbType.Text == "") output = false;
+            if (cbManufacturer.Text == "") output = false;
+            if (cbLocation.Text == "") output = false;
+            if (cbPosition.Text == "") output = false;
+
+            return output;
+        }
+        /// <summary>
         /// Add the new Part
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AddPartButton(object sender, RoutedEventArgs e)
         {
-            bool error = false;
+            bool Passed = ValidatePartsSrceen();
 
-            // TODO - Create Validate Part screen for Add and Update
-
-            if (tbPartName.Text == "") error = true;
-            if (tbPartQty.Text == "") error = true;
-            if (cbType.Text == "") error = true;
-            if (cbManufacturer.Text == "") error = true;
-            if (cbLocation.Text == "") error = true;
-            if (cbPosition.Text == "") error = true;
-
-            if (error == true)
+            if (Passed == true)
             {
                 PartsModel p = new PartsModel();
 
@@ -660,7 +695,6 @@ namespace MiniStores
                 p.ManufacturerFK = FindManu((string)cbManufacturer.SelectedValue);
                 p.LocationFK = FindLocation((string)cbLocation.SelectedValue);
                 p.PositionFK = FindPosition(p.LocationFK, (string)cbPosition.SelectedValue);
-
 
                 SQLiteDataAccess.SavePart(p);
 
@@ -682,48 +716,60 @@ namespace MiniStores
         /// <param name="e"></param>
         private void UpdatePartButton(object sender, RoutedEventArgs e)
         {
-            bool error = false;
+            bool Passed = ValidatePartsSrceen();
 
-            if (tbPartName.Text == "") error = true;
-            if (tbPartQty.Text == "") error = true;
-            if (cbType.Text == "") error = true;
-            if (cbManufacturer.Text == "") error = true;
-            if (cbLocation.Text == "") error = true;
-            if (cbPosition.Text == "") error = true;
-
-            if (error == false)
+            if (Passed == true)
             {
-                int index = lbPartsList.SelectedIndex;
+                int qty = int.Parse(tbPartQty.Text);
 
-                errorlog.InformationMessage("Part Updated", "From: " + Parts[index].ToString());
-
-                Parts[index].PartName = tbPartName.Text;
-                Parts[index].Quantity = int.Parse(tbPartQty.Text);
-                Parts[index].TypeFK = FindType((string)cbType.SelectedValue);
-                Parts[index].ManufacturerFK = FindManu((string)cbManufacturer.SelectedValue);
-                Parts[index].LocationFK = FindLocation((string)cbLocation.SelectedValue);
-                Parts[index].PositionFK = FindPosition(Parts[index].LocationFK, (string)cbPosition.SelectedValue);
-
-                // TODO - Need to check for Qty=0 and delete 
-
-                if (tbPrice.Text != "")
+                if (qty == 0)
                 {
-                    Decimal.TryParse(tbPrice.Text, out decimal num);
-                    Parts[index].Price = num;
+                    MessageBoxResult res = MessageBox.Show(LookUpTranslation("DeleteP"),
+                                    LookUpTranslation("MiniStores"),
+                                    MessageBoxButton.YesNo,
+                                    MessageBoxImage.Hand);
+
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        // Delete the part
+                        DeletePart();
+                    }
+
+                    if (res == MessageBoxResult.No)
+                    {
+                        // update the part
+
+                        int index = lbPartsList.SelectedIndex;
+
+                        errorlog.InformationMessage("Part Updated", "From: " + Parts[index].ToString());
+
+                        Parts[index].PartName = tbPartName.Text;
+                        Parts[index].Quantity = int.Parse(tbPartQty.Text);
+                        Parts[index].TypeFK = FindType((string)cbType.SelectedValue);
+                        Parts[index].ManufacturerFK = FindManu((string)cbManufacturer.SelectedValue);
+                        Parts[index].LocationFK = FindLocation((string)cbLocation.SelectedValue);
+                        Parts[index].PositionFK = FindPosition(Parts[index].LocationFK, (string)cbPosition.SelectedValue);
+
+                        if (tbPrice.Text != "")
+                        {
+                            Decimal.TryParse(tbPrice.Text, out decimal num);
+                            Parts[index].Price = num;
+                        }
+                        else
+                        {
+                            Parts[index].Price = 0.00m;
+                        }
+
+                        Parts[index].Comment = tbComment.Text;
+
+                        errorlog.InformationMessage("", "To:" + Parts[index].ToString());
+
+                        SQLiteDataAccess.UpdatePart(Parts[index]);
+
+                        // Refresh ListBox
+                        RefreshPartsLB();
+                    }
                 }
-                else
-                {
-                    Parts[index].Price = 0.00m;
-                }
-
-                Parts[index].Comment = tbComment.Text;
-
-                errorlog.InformationMessage("", "To:" + Parts[index].ToString());
-
-                SQLiteDataAccess.UpdatePart(Parts[index]);
-
-                // Refresh ListBox
-                RefreshPartsLB();
             }
         }
         /// <summary>
@@ -776,6 +822,13 @@ namespace MiniStores
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DeletePartButton(object sender, RoutedEventArgs e)
+        {
+            DeletePart();
+        }
+        /// <summary>
+        /// Delete a Part
+        /// </summary>
+        private void DeletePart()
         {
             int index = lbPartsList.SelectedIndex;
             lblPParts.Content = "Parts List : " + index.ToString();
@@ -892,6 +945,32 @@ namespace MiniStores
 
         }
         /// <summary>
+        /// Increase the Quantity in the Part screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnQtyUp_Click(object sender, RoutedEventArgs e)
+        {
+            int Qty = int.Parse(tbPartQty.Text);
+
+            Qty++;
+
+            tbPartQty.Text = Qty.ToString();
+        }
+        /// <summary>
+        /// Decrease the Quantity in the Part screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnQtyDown_Click(object sender, RoutedEventArgs e)
+        {
+            int Qty = int.Parse(tbPartQty.Text);
+
+            Qty--;
+
+            tbPartQty.Text = Qty.ToString();
+        }
+        /// <summary>
         /// Populate the Type ComboBox (Parts screen)
         /// </summary>
         /// <param name="sender"></param>
@@ -900,7 +979,7 @@ namespace MiniStores
         {
             if (GlobalSetting.DebugApp == true)
             {
-                lblPType.Content = LookUpTranslation("TypeM") + " " + cbType.SelectedIndex.ToString();
+                lblPType.Content = LookUpTranslation("Type:") + " " + cbType.SelectedIndex.ToString();
             }
         }
         /// <summary>
@@ -912,7 +991,7 @@ namespace MiniStores
         {
             if (GlobalSetting.DebugApp == true)
             {
-                lblPManufacturer.Content = LookUpTranslation("ManufacturerM") + " " + cbManufacturer.SelectedIndex.ToString();
+                lblPManufacturer.Content = LookUpTranslation("Manufacturer:") + " " + cbManufacturer.SelectedIndex.ToString();
             }
         }
         /// <summary>
@@ -924,7 +1003,7 @@ namespace MiniStores
         {
             if (GlobalSetting.DebugApp == true)
             {
-                lblPLocation.Content = LookUpTranslation("LocationM") + " " + cbLocation.SelectedIndex.ToString();
+                lblPLocation.Content = LookUpTranslation("Location:") + " " + cbLocation.SelectedIndex.ToString();
             }
 
             UpdateLocationPositions();
@@ -938,7 +1017,7 @@ namespace MiniStores
         {
             if (GlobalSetting.DebugApp == true)
             {
-                lblPPosition.Content = LookUpTranslation("PositionM") + " " + cbPosition.SelectedIndex.ToString();
+                lblPPosition.Content = LookUpTranslation("Position:") + " " + cbPosition.SelectedIndex.ToString();
             }
         }
         /// <summary>
@@ -2215,5 +2294,6 @@ namespace MiniStores
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
     }
 }

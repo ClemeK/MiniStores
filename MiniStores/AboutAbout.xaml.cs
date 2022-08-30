@@ -17,9 +17,10 @@ namespace MiniStores
             InitializeComponent();
 
             this.Title = LookUpTranslation(ScreenText, "About");
+            lblAboutTitle.Content = LookUpTranslation(ScreenText, "MiniStores");
 
             lblATitle.Content = LookUpTranslation(ScreenText, "Title:");
-            lblTitle.Content = "MiniStore";
+            lblTitle.Content = LookUpTranslation(ScreenText, "MiniStores");
 
             lblADescription.Content = LookUpTranslation(ScreenText, "Description:");
             tbDescription.Text = "This is a inventory application for hobbies.";

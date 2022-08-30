@@ -71,5 +71,6 @@ Position:,Position:
 Refresh,Rafraîchir
 On,Sur
 Off,À l'arrêt
-HelpSubP,Désolé - l'aide n'est actuellement disponible qu'en anglais.
+HelpSubP,Désolé. l'aide n'est actuellement disponible qu'en anglais.
 ReloadP,Redémarrage requis pour que le changement de langue ait lieu.
+DeleteP,La quantité de pièces est maintenant nulle. Voulez-vous que je le supprime de la base de données ?
