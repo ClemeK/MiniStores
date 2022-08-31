@@ -448,9 +448,42 @@ namespace MiniStores
 
                 ColumnTable drv = (ColumnTable)dgSearch.SelectedItem;
 
-                int selectId = int.Parse(drv.PId);
 
-                MessageBox.Show($"you selected - {selectId}");
+                if (drv != null)
+                {
+                    tbMaster.SelectedItem = tiPart;
+
+                    // Update Label with number of parts
+                    lblPParts.Content = LookUpTranslation("PartList") + " (" + Parts.Count.ToString() + "): ";
+
+                    if (GlobalSetting.DebugApp == true)
+                    {
+                        lblPParts.Content += drv.PId;
+                    }
+
+                    // move data into the screen
+                    lblPartIdValue.Content = int.Parse(drv.PId);
+
+                    tbPartName.Text = drv.PName;
+                    tbPartQty.Text = drv.PQty.ToString();
+                    cbType.SelectedValue = drv.PType;
+                    cbManufacturer.SelectedValue = drv.PManu;
+                    cbLocation.SelectedValue = drv.PLoc;
+
+                    UpdateLocationPositions();
+                    cbPosition.SelectedValue = drv.PPos;
+
+                    int p = LookupPartPos(int.Parse(drv.PId));
+                    tbPrice.Text = $"{Parts[p].Price:C2}";
+                    tbComment.Text = Parts[p].Comment;
+
+                    // reset the screen buttons
+                    btnAddPart.IsEnabled = false;
+                    btnUpdatePart.IsEnabled = true;
+                    btnDeletePart.IsEnabled = true;
+
+
+                }
             }
         }
         // ************************************************
@@ -783,7 +816,7 @@ namespace MiniStores
 
             if (index != -1)
             {
-
+                // Update Label with number of parts
                 lblPParts.Content = LookUpTranslation("PartList") + " (" + Parts.Count.ToString() + "): ";
 
                 if (GlobalSetting.DebugApp == true)
@@ -791,6 +824,7 @@ namespace MiniStores
                     lblPParts.Content += index.ToString();
                 }
 
+                // move data into the screen
                 lblPartIdValue.Content = Parts[index].PartsId;
 
                 tbPartName.Text = Parts[index].PartName;
@@ -805,9 +839,11 @@ namespace MiniStores
                 tbPrice.Text = $"{Parts[index].Price:C2}";
                 tbComment.Text = Parts[index].Comment;
 
+                // reset the screen buttons
                 btnAddPart.IsEnabled = false;
                 btnUpdatePart.IsEnabled = true;
                 btnDeletePart.IsEnabled = true;
+
             }
             else
             {
@@ -2114,6 +2150,23 @@ namespace MiniStores
             }
 
             return "";
+        }
+        /// <summary>
+        /// Lookup the Part Index based on the Part Id
+        /// </summary>
+        /// <param name="id">Part Id</param>
+        /// <returns>Part index</returns>
+        private int LookupPartPos(int id)
+        {
+            for (int i = 0; i < Parts.Count; i++)
+            {
+                if (Parts[i].PartsId == id)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
         /// <summary>
         /// Lookup the Type based on the Type Name
