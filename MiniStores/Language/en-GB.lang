@@ -1,15 +1,18 @@
 Key,Phrase
 About,About
-AboutMiniStores,AboutMiniStores
 Add,Add
 Cancel,Cancel
 Clear,Clear
 Comment,Comment
+Comment:,Comment:
 Copyright,Copyright
+Copyright:,Copyright:
 Debug,Debug
+Debug:,Debug:
 Delete,Delete
 DeleteP,Part Quantity is now Zero. Do you want me to delete it from the database?
 Description,Description
+Description:,Description:
 Exit,Exit
 Export,Export
 File,File
@@ -18,6 +21,7 @@ HelpSubP,Sorry. The help is only in English currently.
 Id,Id
 Import,Import
 Language,Language
+Language:,Language:
 Location,Location
 Location:,Location:
 LocationId,Location Id:
@@ -39,15 +43,19 @@ PartList,Part List:
 PartName,Part Name:
 Parts,Parts
 Position,Position
+Position:,Position:
 PositionId,Position Id:
 PositionList,Position List:
-PositionM,PositionM
 PositionName,Position Name:
 Positions,Positions
 Price,Price
+Price:,Price:
 Product,Product
+Product:,Product:
 Qty,Qty
 Quantity,Quantity
+Quantity:,Quantity:
+Refresh,Refresh
 ReloadP,Re-Start Required for the Language change to take place.
 RetainP,Days to Retain Joblog's:
 Save,Save
@@ -55,6 +63,7 @@ Search,Search
 Setting,Setting
 Settings,Settings
 Title,Title
+Title:,Title:
 Type,Type
 Type:,Type:
 TypeId,Type Id:
@@ -63,17 +72,5 @@ TypeName,Type Name:
 Types,Types
 Update,Update
 Version,Version
-ViewHelp,View Help
-ManufacturerM,Manufacturer:
-Position:,Position:
-Quantity:,Quantity:
-Price:,Price:
-Comment:,Comment:
-Refresh,Refresh
-Title:,Title:
-Description:,Description:
-Product:,Product:
-Copyright:,Copyright:
 Version:,Version:
-Language:,Language:
-Debug:,Debug:
+ViewHelp,View Help

@@ -47,6 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Language\de-DE.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Language\en-GB.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

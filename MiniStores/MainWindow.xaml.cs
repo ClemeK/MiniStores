@@ -34,6 +34,7 @@ using System.Windows.Controls;
 * + 23-Jun-2022 - Applications Created.
 */
 
+// TODO - Add Import\Export messages to Language File(s).
 // TODO - Add Print button to the search screen.
 // TODO - Add a Language editor screen.
 // TODO - UPDATE THE HELP FILE!!!
@@ -817,11 +818,11 @@ namespace MiniStores
             if (index != -1)
             {
                 // Update Label with number of parts
-                lblPParts.Content = LookUpTranslation("PartList") + " (" + Parts.Count.ToString() + "): ";
+                lblPParts.Content = LookUpTranslation("PartList") + " (" + Parts.Count.ToString() + ")";
 
                 if (GlobalSetting.DebugApp == true)
                 {
-                    lblPParts.Content += index.ToString();
+                    lblPParts.Content += ": " + index.ToString();
                 }
 
                 // move data into the screen
@@ -1188,11 +1189,11 @@ namespace MiniStores
 
             if (index != -1)
             {
-                lblTTypes.Content = LookUpTranslation("TypeList") + " (" + Types.Count.ToString() + "): ";
+                lblTTypes.Content = LookUpTranslation("TypeList") + " (" + Types.Count.ToString() + ")";
 
                 if (GlobalSetting.DebugApp == true)
                 {
-                    lblTTypes.Content += index.ToString();
+                    lblTTypes.Content += ": " + index.ToString();
                 }
 
                 lblTTypeIdValue.Content = Types[index].TypeId;
@@ -1422,11 +1423,11 @@ namespace MiniStores
 
             if (index != -1)
             {
-                lblMManus.Content = lblMManus.Content = LookUpTranslation("ManufacturerList") + " (" + Manufacturers.Count.ToString() + "): ";
+                lblMManus.Content = lblMManus.Content = LookUpTranslation("ManufacturerList") + " (" + Manufacturers.Count.ToString() + ")";
 
                 if (GlobalSetting.DebugApp == true)
                 {
-                    lblMManus.Content += index.ToString();
+                    lblMManus.Content += ": " + index.ToString();
                 }
 
                 lblMManuIdValue.Content = Manufacturers[index].ManufacturerId;
@@ -1653,11 +1654,11 @@ namespace MiniStores
 
             if (index != -1)
             {
-                lblLLocs.Content = LookUpTranslation("LocationList") + " (" + Locations.Count.ToString() + "): ";
+                lblLLocs.Content = LookUpTranslation("LocationList") + " (" + Locations.Count.ToString() + ")";
 
                 if (GlobalSetting.DebugApp == true)
                 {
-                    lblLLocs.Content += index.ToString();
+                    lblLLocs.Content += ": " + index.ToString();
                 }
 
                 lblLLocIdValue.Content = Locations[index].LocationId;
@@ -1798,7 +1799,7 @@ namespace MiniStores
             tbPosName.Text = "";
 
             // reset the display field on the display
-            lblPPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + "): ";
+            lblPPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + ")";
 
             lblPPosIdValue.Content = "";
 
@@ -1921,11 +1922,11 @@ namespace MiniStores
 
             if (index != -1)
             {
-                lblPPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + "): ";
+                lblPPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + ")";
 
                 if (GlobalSetting.DebugApp == true)
                 {
-                    lblPPoss.Content += index.ToString();
+                    lblPPoss.Content += ": " + index.ToString();
                 }
 
                 lblPPosIdValue.Content = PosSubSet[index].PositionId;
@@ -2070,7 +2071,7 @@ namespace MiniStores
 
                 PosSubSet.Sort((x, y) => x.PositionName.CompareTo(y.PositionName));
 
-                lblPPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + "): ";
+                lblPPoss.Content = LookUpTranslation("PositionList") + " (" + PosSubSet.Count.ToString() + ")";
             }
 
             WireUpPosLB();
