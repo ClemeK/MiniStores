@@ -33,7 +33,7 @@
     <Resource Include="Resources\Help.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\shelf_full_icon.png">
+    <Resource Include="shelf_full_icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -67,7 +67,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Update="Resources\shelf_full_icon.png">
+    <None Update="shelf_full_icon.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
