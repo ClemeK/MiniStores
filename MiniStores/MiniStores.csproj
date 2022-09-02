@@ -33,7 +33,7 @@
     <Resource Include="Resources\Help.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="shelf_full_icon.png">
+    <Resource Include="Resources\shelf_full_icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -53,7 +53,13 @@
     <None Update="Language\en-GB.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Language\es-ES.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Language\fr-FR.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Language\pt-PT.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="MiniStores.ini">
@@ -67,7 +73,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Update="shelf_full_icon.png">
+    <None Update="Resources\shelf_full_icon.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

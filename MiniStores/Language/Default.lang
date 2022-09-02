@@ -20,13 +20,13 @@ Language:,Language:
 Location,Location
 Location:,Location:
 LocationId,Location Id:
-LocationList,Location List:
+LocationList,Location List
 LocationName,Location Name:
 Locations,Locations
 Manufacturer,Manufacturer
 Manufacturer:,Manufacturer:
 ManufacturerId,Manufacturer Id:
-ManufacturerList,Manufacturer List:
+ManufacturerList,Manufacturer List
 ManufacturerName,Manufacturer Name:
 Manufacturers,Manufacturers
 MiniStores,Mini-Stores
@@ -34,13 +34,13 @@ Off,Off
 On,On
 Part,Part
 PartId,Part Id:
-PartList,Part List:
+PartList,Part List
 PartName,Part Name:
 Parts,Parts
 Position,Position
 Position:,Position:
 PositionId,Position Id:
-PositionList,Position List:
+PositionList,Position List
 PositionName,Position Name:
 Positions,Positions
 Price:,Price:
@@ -58,7 +58,7 @@ Title:,Title:
 Type,Type
 Type:,Type:
 TypeId,Type Id:
-TypeList,Type List:
+TypeList,Type List
 TypeName,Type Name:
 Types,Types
 Update,Update

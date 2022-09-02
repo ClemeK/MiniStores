@@ -3,12 +3,12 @@ About,Um
 Add,Hinzufügen
 Cancel,Absagen
 Clear,Klar
-Comment,Kommentar
-Copyright,Urheberrechte ©
-Debug,Debuggen
+Comment:,Kommentar:
+Copyright:,Urheberrechte ©:
+Debug:,Debuggen:
 Delete,Löschen
 DeleteP,Teilemenge ist jetzt Null. Soll ich es aus der Datenbank löschen?
-Description,Beschreibung
+Description:,Beschreibung:
 Exit,Ausgang
 Export,Export
 File,Datei
@@ -16,7 +16,7 @@ Help,Hilfe
 HelpSubP,Es tut uns leid. Die Hilfe ist derzeit nur auf Englisch verfügbar.
 Id,Ausweis
 Import,Importieren
-Language,Sprache
+Language:,Sprache:
 Location,Ort
 Location:,Ort:
 LocationId,Standort-ID:
@@ -38,22 +38,24 @@ PartList,Stückliste:
 PartName,Teilname:
 Parts,Teile
 Position,Position
+Position:,Position:
 PositionId,Positions-ID:
 PositionList,Positionsliste:
 Position:,Position:
 PositionName,Positionsname:
 Positions,Positionen
-Price,Preis
-Product,Produkt
+Price:,Preis:
+Product:,Produkt:
 Qty,Menge
-Quantity,Menge
+Quantity:,Menge:
+Refresh,Aktualisierung
 ReloadP,Neustart erforderlich, damit die Sprachänderung stattfindet.
 RetainP,Tage zur Aufbewahrung von Joblogs:
 Save,Speichern
 Search,Suche
 Setting,Einstellung
 Settings,Einstellungen
-Title,Titel
+Title:,Titel:
 Type,Typ
 Type:,Typ:
 TypeId,Typ-Id:
@@ -61,17 +63,5 @@ TypeList,Typenliste:
 TypeName,Modellname:
 Types,Typen
 Update,Aktualisieren
-Version,Ausführung
 ViewHelp,Hilfe anzeigen
-Position:,Position:
-Quantity:,Menge:
-Price:,Preis:
-Comment:,Kommentar:
-Refresh,Aktualisierung
-Title:,Titel:
-Description:,Beschreibung:
-Product:,Produkt:
-Copyright:,Urheberrechte ©:
 Version:,Ausführung:
-Language:,Sprache:
-Debug:,Debuggen:

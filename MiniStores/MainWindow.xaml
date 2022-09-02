@@ -45,7 +45,7 @@
             </Grid.ColumnDefinitions>
 
             <Image Grid.Column="0" Stretch="Fill" HorizontalAlignment="Stretch" Height="100"
-                   VerticalAlignment="Stretch" Source="shelf_full_icon.png"></Image>
+                   VerticalAlignment="Stretch" Source="Resources\shelf_full_icon.png"></Image>
             <Label x:Name="lblMainTitle" Grid.Column="1" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center" 
                    VerticalAlignment="Center">Mini Stores</Label>
         </Grid>

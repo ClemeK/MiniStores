@@ -1,0 +1,66 @@
+Key,Phrase
+About,Sobre
+Add,Agregar
+Cancel,Cancelar
+Clear,Claro
+Comment:,Comentario:
+Copyright:,Derechos de autor:
+Debug:,Depurar:
+Delete,Borrar
+DeleteP,La cantidad de piezas ahora es cero. ¿Quieres que lo elimine de la base de datos?
+Description:,Descripción:
+Exit,Salida
+Export,Exportar
+File,Expediente
+Help,Ayuda
+HelpSubP,Lo siento. La ayuda solo está en inglés actualmente.
+Id,Id
+Import,Importar
+Language:,Idioma:
+Location,Location
+Location:,Idioma:
+LocationId,Identificación de la ubicación:
+LocationList,Lista de ubicaciones
+LocationName,Nombre del lugar:
+Locations,Ubicaciones
+Manufacturer,Fabricante
+Manufacturer:,Fabricante:
+ManufacturerId,Identificación del fabricante:
+ManufacturerList,Lista de fabricantes
+ManufacturerName,Nombre del Fabricante:
+Manufacturers,Fabricantes
+MiniStores,Mini-Stores
+Off,Apagado
+On,En
+Part,Parte
+PartId,Identificación de parte:
+PartList,Lista de
+PartName,Nombre de parte:
+Parts,Partes
+Position,Posición
+Position:,Posición:
+PositionId,Identificación de la posición:
+PositionList,Lista de posiciones
+PositionName,Nombre de la posición:
+Positions,Posiciones
+Price:,Precio:
+Product:,Producto:
+Qty,Cantidad
+Quantity:,Cantidad:
+Refresh,Actualizar
+ReloadP,Se requiere reiniciar para que se lleve a cabo el cambio de idioma.
+RetainP,Días para retener Joblog's:
+Save,Ahorrar
+Search,Búsqueda
+Setting,Ajuste
+Settings,Ajustes
+Title:,Título:
+Type,Escribe
+Type:,Escribe:
+TypeId,Type Id:
+TypeList,Identificación del tipo:
+TypeName,Escribe un nombre:
+Types,Tipos
+Update,Actualizar
+Version:,Versión:
+ViewHelp,Ver ayuda

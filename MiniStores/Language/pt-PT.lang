@@ -1,0 +1,66 @@
+Key,Phrase
+About,Sobre
+Add,Adicionar
+Cancel,Cancelar
+Clear,Claro
+Comment:,Comente:
+Copyright:,Direito autoral:
+Debug:,Depurar:
+Delete,Excluir
+DeleteP,A quantidade da peça agora é zero. Você quer que eu exclua do banco de dados?
+Description:,Descrição:
+Exit,Saída
+Export,Exportar
+File,Arquivo
+Help,Ajuda
+HelpSubP,Desculpe. A ajuda está apenas em inglês atualmente.
+Id,Id
+Import,Importar
+Language:,Linguagem:
+Location,Localização
+Location:,Localização:
+LocationId,Código do local:
+LocationList,Lista de locais
+LocationName,Nome do local:
+Locations,Localizações
+Manufacturer,Fabricante
+Manufacturer:,Fabricante:
+ManufacturerId,Código do fabricante:
+ManufacturerList,Lista de fabricantes
+ManufacturerName,Nome do fabricante:
+Manufacturers,Fabricantes
+MiniStores,Mini-Stores
+Off,Desligado
+On,Sobre
+Part,Papel
+PartId,Código da peça:
+PartList,Lista de peças
+PartName,Nome da peça:
+Parts,Peças
+Position,Posição
+Position:,Posição:
+PositionId,Código da posição:
+PositionList,Lista de posições
+PositionName,Nome do cargo:
+Positions,Cargos
+Price:,Preço:
+Product:,Produtos:
+Qty,Qty
+Quantity:,Quantidade:
+Refresh,Atualizar
+ReloadP,Reinicialização necessária para que a mudança de idioma ocorra.
+RetainP,Dias para reter Joblogs:
+Save,Salvar
+Search,Procurar
+Setting,Contexto
+Settings,Definições
+Title:,Título:
+Type,Modelo
+Type:,Modelo:
+TypeId,Tipo de identificação:
+TypeList,Lista de tipos
+TypeName,Digite o nome:
+Types,Tipos
+Update,Atualizar
+Version:,Versão:
+ViewHelp,Ver ajuda

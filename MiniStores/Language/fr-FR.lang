@@ -1,75 +1,65 @@
 Key,Phrase
-Search,Chercher
-Part,Partie
-Parts,Les pièces
-Type,Taper
-Types,Types
-Manufacturer,Fabricant
-Manufacturers,Fabricants
-Location,Emplacement
-Locations,Emplacements
-Position,Position
-Positions,Postes
-Id,Id
-Qty,Qté
-PartId,Partie Id:
-PartName,Nom de la pièce:
-Type:,Les types:
-ManufacturerM,ManufacturerM
-Location:,LocationM
-Position:,PositionM
-Quantity,Quantité:
-Price,Prix:
-Comment,Commentaire:
-PartList,Liste des pièces:
-TypeId,Taper Id:
-TypeName,Tapez le nom:
-TypeList,Liste des types:
-ManufacturerId,Fabricant Id:
-ManufacturerName,Nom du Fabricant:
-ManufacturerList,Liste des fabricants:
-LocationId,Emplacement Id:
-LocationName,Nom de la localisation:
-LocationList,Liste des emplacements:
-PositionId,Position Id:
-PositionName,Nom du poste:
-PositionList,Liste des postes:
+About,À propos de
 Add,Ajouter
-Update,Mise à jour
-Delete,Effacer
+Cancel,Annuler
 Clear,Dégager
-Import,Importer
+Comment:,Commentaire:
+Copyright:,droits d'auteur:
+Debug:,Déboguer:
+Delete,Effacer
+DeleteP,La quantité de pièces est maintenant nulle. Voulez-vous que je le supprime de la base de données ?
+Description:,La description:
+Exit,Sortir
 Export,Exporter
 File,Dossier
-Exit,Sortir
 Help,Aider
-ViewHelp,Voir aide
-AboutMiniStores,À propos des MiniStores
-About,À propos de
-Title,Title
-Description,Description
-Product,Product
-Copyright,Copyright
-Version,Version
-Settings,Réglages
-Language,Language
-RetainP,Jours de conservation Joblog's:
-Debug:,Déboguer:
-Save,Sauvegarder
-Cancel,Annuler
-Setting,Paramètre
-Title:,Titre:
-Description:,La description:
-Product:,Produit:
-Copyright:,droits d'auteur:
-Version:,Version:
-Language:,Langue:
-Manufacturer:,Fabricant:
-Location:,Emplacement:
-Position:,Position:
-Refresh,Rafraîchir
-On,Sur
-Off,À l'arrêt
 HelpSubP,Désolé. l'aide n'est actuellement disponible qu'en anglais.
+Id,Id
+Import,Importer
+Language:,Langue:
+Location,Emplacement
+Location:,Emplacement:
+LocationId,Emplacement Id:
+LocationList,Liste des emplacements:
+LocationName,Nom de la localisation:
+Locations,Emplacements
+Manufacturer,Fabricant
+Manufacturer:,Fabricant:
+ManufacturerId,Fabricant Id:
+ManufacturerList,Liste des fabricants:
+ManufacturerName,Nom du Fabricant:
+Manufacturers,Fabricants
+Off,À l'arrêt
+On,Sur
+Part,Partie
+PartId,Partie Id:
+PartList,Liste des pièces:
+PartName,Nom de la pièce:
+Parts,Les pièces
+Position,Position
+Position:,Position:
+PositionId,Position Id:
+PositionList,Liste des postes:
+PositionName,Nom du poste:
+Positions,Postes
+Price:,Prix:
+Product:,Produit:
+Qty,Qté
+Quantity:,Quantité:
+Refresh,Rafraîchir
 ReloadP,Redémarrage requis pour que le changement de langue ait lieu.
-DeleteP,La quantité de pièces est maintenant nulle. Voulez-vous que je le supprime de la base de données ?
+RetainP,Jours de conservation Joblog's:
+Save,Sauvegarder
+Search,Chercher
+Setting,Paramètre
+Settings,Réglages
+Title:,Titre:
+Type,Taper
+Type:,Les types:
+TypeId,Taper Id:
+TypeList,Liste des types:
+TypeName,Tapez le nom:
+Types,Types
+Update,Mise à jour
+Version:,Version:
+ViewHelp,Voir aide

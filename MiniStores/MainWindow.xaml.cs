@@ -193,13 +193,13 @@ namespace MiniStores
             // Part Tab
             lblPPartId.Content = LookUpTranslation("PartId");
             lblPPartName.Content = LookUpTranslation("PartName");
-            lblPQuantity.Content = LookUpTranslation("Quantity");
+            lblPQuantity.Content = LookUpTranslation("Quantity:");
             lblPType.Content = LookUpTranslation("Type:");
             lblPManufacturer.Content = LookUpTranslation("Manufacturer:");
             lblPLocation.Content = LookUpTranslation("Location:");
             lblPPosition.Content = LookUpTranslation("Position:");
-            lblPPrice.Content = LookUpTranslation("Price");
-            lblPComment.Content = LookUpTranslation("Comment");
+            lblPPrice.Content = LookUpTranslation("Price:");
+            lblPComment.Content = LookUpTranslation("Comment:");
             lblPParts.Content = LookUpTranslation("PartList");
 
             btnAddPart.Content = LookUpTranslation("Add");
@@ -567,6 +567,7 @@ namespace MiniStores
         private void WireUpTypesCB()
         {
             cbType.Items.Clear();
+            cbSearchType.Items.Clear();
 
             foreach (var t in Types)
             {
@@ -595,6 +596,7 @@ namespace MiniStores
         private void WireUpManufacturersCB()
         {
             cbManufacturer.Items.Clear();
+            cbSearchManu.Items.Clear();
 
             foreach (var m in Manufacturers)
             {
@@ -623,6 +625,7 @@ namespace MiniStores
         private void WireUpLocationsCB()
         {
             cbLocation.Items.Clear();
+            cbSearchLoc.Items.Clear();
 
             foreach (var l in Locations)
             {
